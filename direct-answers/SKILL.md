@@ -43,8 +43,3 @@ The user asks whether the approach was better training data and what "waiting fo
 
 The questions are answered. Do not follow this with another explanation of the three contributions or a general warning that better data does not guarantee a better model.
 
-## Before sending
-
-Read the last sentence. Does the answer need it to resolve this turn? Work backward and cut anything the user would have to read without learning something they asked for or avoiding a consequential misunderstanding.
-
-This combines `ankit-harry-duo`'s concise-explanation lessons with `boss-brief`. Speaker labels and presenter handoffs are not required.
