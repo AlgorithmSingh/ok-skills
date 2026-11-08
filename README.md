@@ -10,3 +10,4 @@ Reusable skills and prompts for coding assistants.
 ## Prompts
 
 - [Decision handoff](decision-handoff/PROMPT.md): Review owner decisions one at a time, record answers, and hand them back to the working agent.
+- [Decision recap](decision-recap/PROMPT.md): Summarize delegated work as bullet points: what was asked, what was done, the decisions made, and the alternatives.
