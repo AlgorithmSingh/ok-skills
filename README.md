@@ -6,6 +6,7 @@ Reusable skills and prompts for coding assistants.
 
 - [boss-brief](boss-brief/SKILL.md): Give a non-technical owner a plain-English status update and one clear next step.
 - [direct-answers](direct-answers/SKILL.md): Answer the question directly, preserve details that matter, and stop when it is answered.
+- [task-contract](task-contract/SKILL.md): Compile a request or audit a running session into a binding contract with requirement IDs, independent verification, and durable handoff state.
 
 ## Prompts
 
