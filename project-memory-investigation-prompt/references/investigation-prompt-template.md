@@ -81,6 +81,8 @@ An agent's final summary is not proof of completion. Distinguish requested, atte
 
 {{INITIAL_OR_UPDATE_SCOPE}}
 
+If this investigation already produced reports in a shared workspace, copy only this run's analysis into the project-owned output directory. Preserve record identities, source references and valid progress, repairing relative links as needed. Do not restart the research, move source transcripts, delete earlier outputs or touch another session's files.
+
 For an update, write a new snapshot and preserve the previous extraction. Link prior record identities where supported; inspect new/changed sources; reconcile old open items and changed decisions; preserve superseded records and earlier coverage gaps. State what was carried forward without a fresh read and revisit older evidence when a new contradiction requires it. Previous memory is a research aid, not new corroboration. Provide a usable current view, not just an unlabeled list of recent changes.
 
 ## Working boundaries
@@ -103,6 +105,8 @@ Write the research under:
 
 `{{RESEARCH_OUTPUT_DIRECTORY}}`
 
+This is the authoritative analysis location and must be inside the canonical project's own repository unless the owner explicitly directs otherwise. Default to `<project-root>/docs/session-memory/<run-date>/`. Shared transcript locations and the prompt's save location do not determine analysis ownership. Do not leave the primary results in another repository, a viewing copy, or ignored scratch.
+
 Create these nine core files:
 
 - `README.md`: index, goal/scope, extraction cutoff, consequential findings, coverage, conflicts and limitations. For an update, include the previous snapshot reference and what changed.
@@ -115,7 +119,9 @@ Create these nine core files:
 - `experience/agent-behavior-patterns.md`
 - `continuity/unresolved-state.md`
 
-Use readable Markdown with linked evidence records. Keep observations separate from proposed lessons. No database, new extraction framework or automatic rule installation is required.
+Use readable Markdown with linked evidence records. Keep observations separate from proposed lessons. Follow the project's documentation metadata, navigation and changelog rules, adding required index files as well as the nine core artifacts. No database, new extraction framework or automatic rule installation is required.
+
+Commit and push the analysis and required documentation navigation/log changes in the canonical project's repository, staging only those paths and preserving unrelated work. Save your own session transcripts separately under that project's rules. Do not copy the source transcript archive into the analysis directory or change its ownership.
 
 Cover all accessible relevant sources you inventory, not a convenient sample. If interrupted, leave exact coverage and a continuation point. Do not claim complete reading while sources remain uninspected. If a category has no supported findings, say so rather than inventing examples.
 

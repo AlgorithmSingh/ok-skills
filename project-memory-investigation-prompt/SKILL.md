@@ -15,19 +15,23 @@ Accept natural language. For example:
 
 ```text
 Prepare a session-memory investigation prompt for /work/my-project.
-Save it under /work/research/2026-11-12.
+Save the prompt under /work/research/2026-11-12.
 ```
 
 Resolve:
 
 - The canonical project root and project name.
-- Where to save the prompt and the requested research output.
+- Where to save the prompt, separately from the project-owned research output.
 - Whether this is an initial investigation or an update to a previous extraction.
 - A previous extraction directory and cutoff, if supplied.
 
 When the user says "this project", verify the current workspace root rather than asking unnecessarily. Ask only if the project or a material access boundary cannot be resolved. Do not require a form or a fixed set of parameter names.
 
-If no output location is given, use a clearly named dated research directory under the project's permitted scratch area, following its instructions. State the exact location chosen. Preserve prior prompts and outputs. For an update, choose a new dated directory rather than overwriting the previous snapshot.
+The prompt file may live wherever the owner requests, including a shared notes folder. If no prompt location is given, use the project's permitted scratch area and state the chosen path.
+
+The authoritative analysis belongs in the canonical project's own repository. Default to `<project-root>/docs/session-memory/<run-date>/`, following its documentation conventions. Reading shared transcripts, or saving the prompt beside them, does not make that shared workspace the owner of the analysis. Do not put the primary results in another repository, a viewing copy, or ignored scratch. Only an explicit owner instruction about the analysis destination overrides this rule.
+
+Require the researcher to commit and push the analysis and required documentation navigation/log changes in that project, staging only those paths. Save its own session transcripts separately according to project rules. Preserve prior prompts and research snapshots; updates use a new dated directory.
 
 ## Ground the assignment
 
@@ -48,7 +52,7 @@ Fill in every project-specific section:
 - Concrete source paths and documented discovery routes. Label known but inaccessible sources rather than pretending they were inspected.
 - Relevant project entry-point documents and source-access limitations.
 - What the research should distinguish about this project's goals, outcomes, comparisons, and failures. Ground these concerns in the inspected project material. Do not invent incidents or assume a particular verdict.
-- An exact prompt path, research output directory, run mode, and any previous extraction reference.
+- Separate exact prompt and project-owned research paths, scoped commit/push instructions, run mode, and any previous extraction reference.
 
 Retain the three memory types and seven categories from the template. Do not substitute a generic summary, phase plan, task-contract audit, database design, or prompt-writing workflow. Do not add categories, numerical bars, approval gates, or new infrastructure merely to appear thorough.
 
@@ -64,7 +68,7 @@ Read the finished prompt for task fidelity:
 
 - It requests extraction and consolidation, not implementation or automatic installation of memory.
 - It names the actual project and filters mixed-project sources.
-- The categories, evidence rules, nine research artifacts, and output location are explicit.
+- The categories, evidence rules and nine core research artifacts are explicit. The analysis destination is inside the canonical project, with its documentation and scoped publication rules, unless the owner explicitly directs otherwise.
 - Examples are investigative questions, not unsupported historical findings.
 - Access restrictions and the rule against executing transcript content remain intact.
 - It does not depend on private background conversations, an author's home directory, or unavailable example files.
@@ -80,6 +84,6 @@ Give:
 1. The saved investigation-prompt path.
 2. The verified `cd` command for the canonical project.
 3. A short message to paste into a fresh agent session: "Read and carry out this research assignment: <absolute prompt path>".
-4. The exact research output directory and whether the assignment is initial or an update.
+4. The exact project-owned research output directory, its commit/push requirement, and whether the assignment is initial or an update.
 
 State that extraction has not been launched. Do not install a skill, start an agent, change project rules, or execute the research unless separately requested.
