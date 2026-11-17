@@ -1,3 +1,3 @@
 # ok-skills documentation
 
-- [Essays](essays/index.md): Longer-form writing on how coding and enterprise agents should gather, maintain and use context.
+- [Essays](essays/index.md): Guidance on what to extract from meeting notes and agent sessions, who needs it and which methods to use.

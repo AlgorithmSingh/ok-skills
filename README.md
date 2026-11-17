@@ -16,4 +16,4 @@ Reusable skills and prompts for coding assistants.
 
 ## Essays
 
-- [Agent context strategy](docs/essays/agent-context-strategy.md): What to extract from coding-agent sessions and meeting notes, and how to maintain, retrieve, enrich and evaluate that context for agents.
+- [Agent context strategy](docs/essays/agent-context-strategy.md): What to extract from meeting notes and agent sessions for coding, SRE and assistant personas, including what to use, borrow, defer or leave outside scope.
