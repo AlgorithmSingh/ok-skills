@@ -4,6 +4,8 @@ Reusable skills and prompts for coding assistants.
 
 ## Skills
 
+- [extract-session-details](extract-session-details/SKILL.md): Extract prior agent work, user steering, verified outcomes and handoff state from session transcripts and tool traces.
+- [extract-meeting-notes](extract-meeting-notes/SKILL.md): Extract decisions, commitments, procedures and open work from meeting notes or transcripts.
 - [project-memory-investigation-prompt](project-memory-investigation-prompt/SKILL.md): Prepare an evidence-backed session-history investigation for any project, using three memory types and seven categories. Includes a portable template and initial/update modes. Analysis is committed in the target project's own repository; preparation does not launch extraction.
 - [boss-brief](boss-brief/SKILL.md): Give a non-technical owner a plain-English status update and one clear next step.
 - [direct-answers](direct-answers/SKILL.md): Answer the question directly, preserve details that matter, and stop when it is answered.

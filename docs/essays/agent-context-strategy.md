@@ -159,7 +159,9 @@ The following related tools and techniques also have explicit decisions. They do
 | Dolt/DVC/lakeFS/Git/git-annex; TRL/Axolotl/SFT/GRPO/Gemma/QLoRA/vLLM/Harbor/Inspect/MLflow/SkyPilot/dstack/Ray/Docker/fleet-sandbox | Outside scope | Lab subject matter. Extract decisions, provenance, results and restrictions; do not design this stack here. Inspect is optional if extraction evaluation is later automated. |
 | Pi/Claude Code/Codex/OpenCode/Kimi; Plannotator/spec-review-agent; Terminal/PTY/STT/TTS | Outside scope | Source identities and review interfaces. Preserve roles, steering and handoffs; UI construction is separate. |
 
-## 7. Use the working extraction prompt
+## 7. Run the extraction
+
+In Claude Code, use [extract-session-details](../../extract-session-details/SKILL.md) for agent session logs or [extract-meeting-notes](../../extract-meeting-notes/SKILL.md) for meeting transcripts and notes. Supply the material and any persona tasks you want emphasized.
 
 Use the [working extraction prompt](#working-extraction-prompt) with the supplied sources and intended consumer tasks. Do an extraction pass, then revisit the source specifically for omissions, false agreement, lost conditions and unsupported outcomes. Do not manufacture records to fill a category. Use the existing model or agent to perform both passes.
 
