@@ -2,7 +2,7 @@
 type: essay
 title: "Agent context strategy: what to extract"
 description: What to extract from meeting notes and agent sessions for coding, SRE and assistant personas, with explicit tool and method decisions.
-timestamp: 2026-11-17T09:42:04-05:00
+timestamp: 2026-11-19T18:10:00-05:00
 ---
 
 # Agent context strategy: what to extract
@@ -161,7 +161,7 @@ The following related tools and techniques also have explicit decisions. They do
 
 ## 7. Run the extraction
 
-In Claude Code, use [extract-session-details](../../extract-session-details/SKILL.md) for agent session logs or [extract-meeting-notes](../../extract-meeting-notes/SKILL.md) for meeting transcripts and notes. Supply the material and any persona tasks you want emphasized.
+In Claude Code, use [extract-session-details](../../extract-session-details/SKILL.md) for agent session logs and AI chat exports, or [extract-meeting-notes](../../extract-meeting-notes/SKILL.md) for meeting transcripts and notes. Both store what they extract instead of returning a brief. Each source is first compressed on its own into `compressed/`, keeping every specific with links to its lines. A second pass then writes one extraction document per source into `docs/extractions/`, holding material shared between sources once and linking sources that revise, adapt, continue, conflict with or judge each other.
 
 Use the [working extraction prompt](#working-extraction-prompt) with the supplied sources and intended consumer tasks. Do an extraction pass, then revisit the source specifically for omissions, false agreement, lost conditions and unsupported outcomes. Do not manufacture records to fill a category. Use the existing model or agent to perform both passes.
 

@@ -1,5 +1,9 @@
 # Documentation log
 
+## 2026-11-19
+
+- Updated the agent context essay's run section: the extraction skills now store every detail in per-source compressions and linked extraction documents instead of returning a brief.
+
 ## 2026-11-17
 
 - Linked the separate session and meeting extraction skills from the agent context essay.
