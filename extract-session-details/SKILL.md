@@ -37,6 +37,17 @@ A document without speaker turns, such as an architecture or strategy document, 
 
 Notes of third-party material, such as course or lecture notes, take the short reference-notes form in the store.
 
+## Keep research and method claims, not only a map of them
+
+When the user asks to keep research or method knowledge (what a paper, benchmark, technique or procedure establishes and when it applies), a section map is not enough: it tells a later reader where the knowledge was, not what it said. For each such claim in a source, record:
+
+- **The claim** as the source states it, with its numbers and scope, and who makes it: the original author, the note-taker, or a speaker in the session reporting on it.
+- **The support the source gives**: an experiment, a dataset, a measurement, a citation, an argument, or none stated. Give the locator the source supplies (title, authors, link, section or page) exactly.
+- **Assumptions and applicability**: the conditions under which the source says it holds, such as model, data, scale or setting.
+- **Limits and counterevidence** the source states, including negative results and what it did not test.
+
+Keep a source's claim apart from evidence that someone established it. A session that reports a paper holds the session's account of that paper, not the paper: mark it second-hand and leave the original's support unknown unless the original is among the supplied sources. A recommendation is recorded as a recommendation, not as an accepted decision or a demonstrated result. Where the source gives no support, assumption or limit, write `not stated`; do not fill it from general knowledge, and do not fetch material the user did not supply. This adds to the seven categories; it does not replace the incident, decision and steering facts they already require.
+
 ## Keep the specifics a reader will need
 
 - **Coding:** intended and actual changes, paths and revisions, interfaces, conventions, attempts, test names and observed results, user corrections, and remaining work.
