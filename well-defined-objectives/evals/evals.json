@@ -1,0 +1,51 @@
+{
+  "skill_name": "well-defined-objectives",
+  "evals": [
+    {
+      "id": 0,
+      "prompt": "task for the agent: find out our playwright test coverage by looking at the code and see whats covered, then also look at the website and crawl it. turn that into a proper target i can hand over",
+      "expected_output": "A short target. One sentence states the end state over a fixed list (every page the crawl finds). Two to four pass or fail checks, including counts that match the list and a citation per row. It says which meaning of coverage it chose, gives no steps, and does not offer to run the task.",
+      "files": [],
+      "expectations": [
+        "The reply states the objective in a single sentence that describes an end state, not an activity.",
+        "The reply gives between two and four success criteria, and each one is a check that can come back pass or fail.",
+        "The reply does not prescribe steps, an order of work or a method for the worker to follow.",
+        "The reply does not offer to carry out the task and does not ask whether to proceed.",
+        "Every threshold, list or project fact that the user did not supply is explicitly marked as a proposal for the user to confirm, or the reply introduces none.",
+        "The objective is defined over a fixed list of items taken from a named source, such as every page the crawl finds.",
+        "A success criterion requires the number of rows or items in the result to match that list.",
+        "The reply says which meaning of 'coverage' it chose."
+      ]
+    },
+    {
+      "id": 1,
+      "prompt": "i need to hand this off to a subagent: 'look into why the checkout e2e test is flaky on CI and fix it'. write the brief for it",
+      "expected_output": "A brief whose core is an objective, conditions and two to four pass or fail checks. It requires repeated passing runs with the count stated, says what must not change so the test cannot be made to pass by retries, skipping or weaker assertions, marks any number it chose as a proposal, and leaves the method to the subagent.",
+      "files": [],
+      "expectations": [
+        "The reply states the objective in a single sentence that describes an end state, not an activity.",
+        "The reply gives between two and four success criteria, and each one is a check that can come back pass or fail.",
+        "The reply does not prescribe steps, an order of work or a method for the worker to follow.",
+        "The reply does not offer to carry out the task and does not ask whether to proceed.",
+        "Every threshold, list or project fact that the user did not supply is explicitly marked as a proposal for the user to confirm, or the reply introduces none.",
+        "The target says what must not change, so that the test cannot be made to pass by adding retries, skipping it or weakening its assertions.",
+        "A success criterion requires repeated passing runs of the test on CI, with the number of runs stated."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "whats the objective and success criteria for this: 'rewrite our API docs so theyre more like stripes docs'. not asking you to do it, just want the target",
+      "expected_output": "A short target that replaces 'like Stripe's docs' with named properties, or with a reviewed example whose matching points are named. Anything it proposes is marked for the user to confirm. It does not offer to do the rewrite.",
+      "files": [],
+      "expectations": [
+        "The reply states the objective in a single sentence that describes an end state, not an activity.",
+        "The reply gives between two and four success criteria, and each one is a check that can come back pass or fail.",
+        "The reply does not prescribe steps, an order of work or a method for the worker to follow.",
+        "The reply does not offer to carry out the task and does not ask whether to proceed.",
+        "Every threshold, list or project fact that the user did not supply is explicitly marked as a proposal for the user to confirm, or the reply introduces none.",
+        "Success is not measured by resemblance to Stripe's docs: the reply replaces 'like Stripe's docs' with named properties, or with a reviewed example whose matching points are named.",
+        "The reply is under 250 words."
+      ]
+    }
+  ]
+}
