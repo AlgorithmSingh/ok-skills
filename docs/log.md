@@ -1,5 +1,9 @@
 # Documentation log
 
+## 2026-11-22
+
+- Synced `extract-session-details` and `extract-meeting-notes` with the verified v1 three-stage knowledge store and contract fixes from `agent-context-strategy` (`references/knowledge.md`, updated `references/store.md`, `scripts/check_store.py`), keeping the captured-view and research-claim additions from 2026-11-21.
+
 ## 2026-11-19
 
 - Updated the agent context essay's run section: the extraction skills now store every detail in per-source compressions and linked extraction documents instead of returning a brief.

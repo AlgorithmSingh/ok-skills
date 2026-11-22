@@ -5,8 +5,8 @@ Reusable skills and prompts for coding assistants.
 ## Skills
 
 - [well-defined-objectives](well-defined-objectives/SKILL.md): Turn a vague request into a one-sentence objective with success criteria anyone can check, with the method left open. Includes coding examples and the pattern for "find out" tasks.
-- [extract-session-details](extract-session-details/SKILL.md): Extract and store every detail of agent session transcripts, AI chat exports and the documents that come with them: one compression per source in `compressed/`, then one linked extraction document per source in `docs/extractions/`.
-- [extract-meeting-notes](extract-meeting-notes/SKILL.md): Extract and store every decision, commitment, procedure and open item from meeting notes or transcripts, in the same two stores as the session skill.
+- [extract-session-details](extract-session-details/SKILL.md): Extract and store every detail of agent session transcripts, AI chat exports and the documents that come with them: one compression per source in `compressed/`, one linked evidence document per source in `docs/extractions/`, and maintained subject pages for features, services, projects, procedures, decisions and recurring problems under `docs/knowledge/`, with a subject registry, a source ledger, a holding page and `scripts/check_store.py`.
+- [extract-meeting-notes](extract-meeting-notes/SKILL.md): Extract and store every decision, commitment, procedure and open item from meeting notes or transcripts, in the same three-stage store as the session skill.
 - [project-memory-investigation-prompt](project-memory-investigation-prompt/SKILL.md): Prepare an evidence-backed session-history investigation for any project, using three memory types and seven categories. Includes a portable template and initial/update modes. Analysis is committed in the target project's own repository; preparation does not launch extraction.
 - [boss-brief](boss-brief/SKILL.md): Give a non-technical owner a plain-English status update and one clear next step.
 - [direct-answers](direct-answers/SKILL.md): Answer the question directly, preserve details that matter, and stop when it is answered.
