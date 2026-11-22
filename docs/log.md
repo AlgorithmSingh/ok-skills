@@ -2,6 +2,7 @@
 
 ## 2026-11-22
 
+- Synced `extract-session-details` and `extract-meeting-notes` with the workflow-scope, local-definition and linked rule-application rules from `agent-context-strategy` (`0005b58`).
 - Synced `extract-session-details` and `extract-meeting-notes` with the verified v1 three-stage knowledge store and contract fixes from `agent-context-strategy` (`references/knowledge.md`, updated `references/store.md`, `scripts/check_store.py`), keeping the captured-view and research-claim additions from 2026-11-21.
 
 ## 2026-11-19

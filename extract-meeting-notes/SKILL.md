@@ -31,6 +31,8 @@ Look for goals and success criteria, facts and assumptions, decisions and altern
 
 Capture both sides of a disagreement with attribution. Keep conditional plans conditional. When the source revises an earlier statement, keep both and mark the earlier one replaced.
 
+Keep attributed definitions and boundaries that change what a rule means or when it applies, with the affected record and its evidence. For a useful application discussed in the meeting, keep the answer confirmed by the person responsible for the rule and the conditions of that confirmation. Cases offered only to illustrate the rule stay in evidence. Confirmation that a rule applies establishes the obligation for that case. Approval and completion require their own evidence.
+
 ## Name the subjects
 
 For each record, name the feature, service, project, procedure, decision or recurring problem it concerns, as the source names it, in the compression's "Subjects it names" section. Procedures, approvals and routing feed procedure pages: keep the trigger, steps, required fields, approvers, routing, escalation and completion evidence on their own records so Stage 3 can place them on one procedure page. Keep each status transition distinct, with its own date and evidence: requested, submitted, approved, rejected, completed and verified, and assigned and accepted.

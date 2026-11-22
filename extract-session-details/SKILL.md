@@ -37,7 +37,9 @@ In a session or conversation, check all seven categories:
 6. **Agent behavior patterns.** Recurring behavior only when supported by independent occurrences, with consequences, conditions and counterexamples. Keep a single useful incident as an episode. Two or more dated occurrences of the same technical failure mode (the same component and kind of symptom), even within one session, earn a `problem` page stating what was observed.
 7. **Unresolved state.** Open work, last known status, attempts, blockers, hypotheses, owner if known, next suggested or accepted action, and what would resolve it.
 
-Research conversations also hold options compared (each with its verdict and reasons), definitions, worked examples, references with their links, and material the user pasted. Keep each as its own record.
+Keep user corrections and observed usage that show what a workflow term refers to, with the affected record and the conditions in which that meaning was stated or observed. Label inferred meaning `(inferred)`. Keep useful demonstrations of applying a rule with the task, conditions, result and limits of the evidence. Distinguish what was actually observed from the agent's report, and keep unrun checks and unresolved approval or verification visible.
+
+In research conversations, keep options compared (with each verdict and reason), general definitions, worked examples, linked references, and material the user pasted. Keep these as separate points where they stand alone. Workflow-specific meaning belongs with the record it qualifies.
 
 A document without speaker turns, such as an architecture or strategy document, holds decisions and rejected alternatives as the document states them, tables row by row, procedures step by step, diagrams, open validation items, references, and its own status statements (version, proposal, not deployed). Its records are `document` records: they are proposals unless a linked source shows someone deciding them.
 
