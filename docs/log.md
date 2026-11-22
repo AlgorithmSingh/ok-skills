@@ -2,8 +2,9 @@
 
 ## 2026-11-22
 
-- Synced `extract-session-details` and `extract-meeting-notes` with the workflow-scope, local-definition and linked rule-application rules from `agent-context-strategy` (`0005b58`).
-- Synced `extract-session-details` and `extract-meeting-notes` with the verified v1 three-stage knowledge store and contract fixes from `agent-context-strategy` (`references/knowledge.md`, updated `references/store.md`, `scripts/check_store.py`), keeping the captured-view and research-claim additions from 2026-11-21.
+- Added `AGENTS.md` requiring the repository to stay standalone and free of machine-local paths or private references. Added [Google Knowledge Catalog vs. ok-skills extraction](essays/knowledge-catalog-vs-extraction-skills.md) and linked it from `README.md` and `docs/essays/index.md`.
+- Updated `extract-session-details` and `extract-meeting-notes` with workflow-scope checks, local-definition capture and linked rule-application rules.
+- Updated `extract-session-details` and `extract-meeting-notes` with the three-stage knowledge store (`references/knowledge.md`, updated `references/store.md`, `scripts/check_store.py`) and contract fixes, keeping the captured-view and research-claim additions from 2026-11-21.
 
 ## 2026-11-19
 

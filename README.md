@@ -20,3 +20,4 @@ Reusable skills and prompts for coding assistants.
 ## Essays
 
 - [Agent context strategy](docs/essays/agent-context-strategy.md): What to extract from meeting notes and agent sessions for coding, SRE and assistant personas, including what to use, borrow, defer or leave outside scope.
+- [Google Knowledge Catalog vs. ok-skills extraction](docs/essays/knowledge-catalog-vs-extraction-skills.md): Side-by-side comparison of Google Cloud Knowledge Catalog and this repository's extraction skills, highlighting what overlaps, where these skills are stronger, and which gaps are worth reviewing.
