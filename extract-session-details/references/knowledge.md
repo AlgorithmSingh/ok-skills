@@ -1,6 +1,6 @@
 # Knowledge: subject pages, registry, ledger and holding page
 
-Stage 3 of the store. It turns the records in the evidence documents under `docs/extractions/` into maintained pages, one per subject, under `docs/knowledge/`. Read [store.md](store.md) first for Stages 1 and 2 and the record format. Use the locations below unless the user or the project's instructions name others.
+Stage 3 of the store. It turns the records in the evidence documents under `docs/extractions/` into maintained pages, one per subject, under `docs/knowledge/`. Stage 1 defines the [record format](store.md). Stage 2 builds the [evidence documents](evidence.md). Use the locations below unless the user or the project's instructions name others.
 
 | File | Location | Holds |
 |---|---|---|
@@ -8,7 +8,7 @@ Stage 3 of the store. It turns the records in the evidence documents under `docs
 | Registry | `docs/knowledge/subjects.md` | One row per subject: ID, title, aliases, scope, status, page. |
 | Ledger | `docs/knowledge/sources.md` | One row per distinct source: hash, dates, stage, evidence document and the subjects it touched. |
 | Holding page | `docs/knowledge/unassigned.md` | Actionable records whose subject the evidence does not establish. |
-| Indexes | `docs/knowledge/index.md` and one `index.md` in each type folder | Navigation in the format of [store.md](store.md) Stage 2 step 8. `docs/knowledge/index.md` lists the three tables and the type folders. |
+| Indexes | `docs/knowledge/index.md` and one `index.md` in each type folder | Navigation in the format of [evidence.md](evidence.md) step 8, when the project uses indexes. `docs/knowledge/index.md` lists the three tables and the type folders. |
 
 A subject page states each current specific once and links the source lines that establish it. Its History rows name the change and link the evidence. They do not restate the record. The evidence documents stay as they are: they say what one source said, with its status at the time. A subject page says what is established about the subject as of its latest evidence.
 
@@ -38,7 +38,7 @@ Rules:
 - **Page path.** `docs/knowledge/<type>s/<slug>.md`: `projects/`, `services/`, `features/`, `procedures/`, `decisions/`, `problems/`.
 - **Aliases.** Every name a source uses for the subject, each with a link to a line that uses it, listed in the page's Scope section. Front matter `aliases` and the registry's Aliases column list the names only.
 - **Matching.** Compare a source's names with every ID slug, title and alias in the registry. Normalize both sides the same way: lowercase, replace each punctuation character with a space, collapse spaces. Treat an exact normalized name as a subject match when the record's scope is compatible. When its scope conflicts, use the other source evidence to determine the subject before routing or adding aliases. If the subject remains unclear, use the holding page. Never treat two subjects as one merely because their names look alike, share words or one contains the other. When no registered name matches exactly, check for a **candidate match** before creating a subject: a record that shares a literal, distinctive identifier with an existing subject's items (a test name, file path, ticket, branch, commit or exact error string), or where the source explicitly refers back to an earlier item or discussion ("last time", "the same failure as last week", or answering an open item from an earlier source). On a clear candidate match whose scope fits that subject, route to the existing subject, add the new name as an alias with its evidence link, and add a `revised` History row. If a name matches two active subjects, or a candidate match remains uncertain, use the record's scope and other names. When a possible duplicate remains unresolved, use the holding page with `possible duplicate of <id>` in Why unassigned.
-- **New subject.** Create one only when a source names a distinct feature, service, procedure, decision or recurring problem, the evidence gives it state of its own to maintain beyond a single mention (such as a requirement, decision, owner, status or attempt), and neither exact matching nor candidate matching matches an existing subject. A sub-feature gets its own page only when a source treats it as separate work (for example with its own owner, estimate or ticket); otherwise it stays an item on the broader subject. If the scope of the thing is unclear, put the record on the holding page instead. To create a subject, write the page from the template for its type, add its registry row, and add its line to the type folder's `index.md`.
+- **New subject.** Create one only when a source names a distinct feature, service, procedure, decision or recurring problem, the evidence gives it state of its own to maintain beyond a single mention (such as a requirement, decision, owner, status or attempt), and neither exact matching nor candidate matching matches an existing subject. A sub-feature gets its own page only when a source treats it as separate work (for example with its own owner, estimate or ticket); otherwise it stays an item on the broader subject. If the scope of the thing is unclear, put the record on the holding page instead. To create a subject, write the page from the template for its type, add its registry row, and update the type index when the project uses one.
 - **Rename.** Only when a source or the owner says it. Keep the ID. Change the title in front matter, the H1 and the registry. Add the old name as an alias. Add a History row with Change `revised`.
 - **Merge and split.** Only on explicit evidence (including a later source or check showing a shared literal identifier or explicit back-reference between two separately created pages) or the owner's instruction. Move each item to its successor page with a `moved` History row there that cites each source supporting the item. The retired page keeps its History, gets a `moved` row, and becomes a short page pointing to its successor or successors. Its front matter `status` and registry Status read `merged into <id>` or `split into <id>, <id>`. Never delete a retired page.
 
@@ -53,14 +53,16 @@ Name each record's subjects from the evidence document's "Subjects it names" sec
 Do not route:
 
 - records marked `illustrative`, including purely illustrative worked examples and hypotheticals;
-- purely background records, such as general definitions, explanations and reference notes of third-party material;
+- records explicitly labelled `background` in evidence, such as general definitions, explanations and reference notes of third-party material;
 - records the evidence document does not hold. A Not held row means another document holds the passage; route it from the holder.
+
+When a requested research claim or one material to a decision, design or comparison concerns a subject, route Claim, Support, Applies when and Limits together on its canonical item, preserving attribution. If actionable but scope is unclear, use the holding page. General reference material stays labelled background in evidence. For example, minutes choosing batches of 20 might cite a trial. On the batch-size decision keep **Claim** “median queue time fell from 8 s to 5 s”, **Support** “staging trial reported by Eli”, **Applies when** “batches of 20 on the trial dataset”, and **Limits** “peak load untested”. The decision and the reported measurement retain their own statuses.
 
 Illustrative examples stay in evidence and cannot create or update live knowledge. Readers can follow a rule's existing evidence links to the source records and examples. If the source also establishes an applicability decision, observation, or outcome, route that fact under its own status, scope, and evidence.
 
 A whole source that says it is invented, such as a test fixture, is not illustrative record by record. Route it only into a store the user named for it, never into the project's own `docs/knowledge/`.
 
-Keep each record's status. A `second-hand` record can add or corroborate an item, but it never supersedes or resolves one held from a first-hand source.
+Keep each record's status. A `second-hand` record can add provisional knowledge. A reproduction of an existing observation adds no independent corroboration. Second-hand records never supersede or resolve first-hand evidence.
 
 ## Dates and order
 
@@ -68,7 +70,7 @@ Keep three dates apart:
 
 - **Event date:** when the thing was said, decided or observed. For a meeting, the meeting date. For a session, the date of the turn if stated, otherwise the session date. Write `YYYY-MM-DD`, or `YYYY-MM` or `YYYY` when the source gives only that, or `unknown`.
 - **Effective dates:** what the source says about when something applies or ends, such as "until the migration is verified". Keep them as bullets on the item, worded as stated.
-- **Ingested date:** the date of the run that wrote the row, `YYYY-MM-DD`, in the owner's local time zone (`America/New_York` unless stated otherwise) rather than the worker machine's clock.
+- **Ingested date:** the date of the run that wrote the row, `YYYY-MM-DD`, in the owner/project local time zone, or UTC when unknown.
 
 `evidence_through` on a page is the latest event date applied to it, or `unknown` if every record it holds is undated.
 
@@ -81,7 +83,7 @@ Before applying a record to an existing item, check that the source addresses th
 For each routed record, in event-date order:
 
 1. **Add.** A new specific becomes a current item with its status, event date and evidence links. History: `added`.
-2. **Corroborate.** The same specifics from another source add that source's evidence links to the item. No second item. History: `corroborated`.
+2. **Corroborate.** Independent evidence for the same specifics add that source's evidence links to the item. No second item. History: `corroborated`.
 3. **Refine.** Compatible added detail amends the item. Both sources stay linked. History: `revised`.
 4. **Supersede.** A source states that it replaces, changes or withdraws an earlier position, and its speaker has authority over that choice in the evidence. Move the old item to Superseded and withdrawn with what replaced it, when and by whom. History: `superseded`, or `withdrawn` when the proposer drops their own proposal. Observations and occurrences are never superseded by later observations or measurements; they stay as dated occurrences, while a later observation adds an occurrence or updates the Status item. Only a source correction (Source edit) or an explicit retraction by the observer moves an observation to Superseded and withdrawn.
 5. **Later decision, no explicit reference.** The same decider, or someone the evidence shows has authority, makes a different choice on the same question at a later event date. Move the earlier item to Superseded and withdrawn and mark it `(inferred from date order)`. History: `superseded`, with `(inferred from date order)` in What changed.
@@ -91,7 +93,9 @@ For each routed record, in event-date order:
 
 **Late evidence.** A record whose event date is earlier than the page's `evidence_through` uses the same rules. Insert its History row at its own date. Then re-apply, in event-date order, every later record on the same item. If one of them now applies differently, change that row's Change and What changed to match and fix the item. Do not add rows for those later records. With candidate matching and the subject-creation threshold, the store reaches the same active subject pages, current specifics and statuses whichever order the sources arrived in; a page's ID slug comes from the first source that creates it, while later names become aliases.
 
-**Idempotency.** If a page's History already has a row with the record's source sha256 prefix and the same line range, the record changes nothing on that page. The holding page works the same way.
+**Idempotency.** Reconcile each effect by source hash, underlying statement or observation, target item and effect on that item. Compare provenance and meaning as well as lines. A single span can supersede one item and add another. On retry apply only missing effects. When re-extraction shifts a span or renames a heading, repair locators on existing rows, including holding rows, and preserve Ingested. Replay later records when an effect changes. Never use a hash/span match as a reason to skip the remaining effects.
+
+**Owner edits.** Append each owner rule, clarification, retirement or curated worked example verbatim to `docs/knowledge/owner-instructions.md` with a stable entry heading, event date, subject ID, target item, scope and requested effect. Link supporting evidence and identify the owner. Link the entry in the History Lines cell with Source `owner instruction`. Replay these entries alongside evidence in event-date order. Before replacing a page with legacy owner History or manual edits, reconcile its reviewed text into this journal. Preserve unresolved edits for the owner when attribution or scope is unclear.
 
 ## Recurring problems and attempts
 
@@ -249,7 +253,7 @@ Put each item in the section its kind names: requirements and acceptance criteri
 - <every specific, stated once>
 ```
 
-- **Status.** The record's status phrase from the allowed vocabulary in [store.md](store.md): `decided by <who>` (which also covers a rule or constraint set by someone the evidence shows owns that service, procedure or domain), `proposed` (or `proposed by <who>`, or `proposed; <who> replied ...`), `stated by <who>`, `requested by <who>`, `accepted by <who>`, `rejected by <who>`, `claimed by <who>`, `withdrawn` (or `withdrawn by <who>`), `deferred` (or `deferred by <who>`), `observed` (or `observed by <who>`), `reported` (or `reported by <who>`), `open`, or `second-hand` (or `second-hand and reported` / `second-hand, reported by <who>`). For a state transition, use the single current state: `requested`, `submitted`, `approved`, `rejected`, `completed`, `verified`, `assigned` or `accepted`, optionally with `by <who>` when known, or combined with `, reported` / `, reported by <who>` (for example `completed, reported by <who>`). Any other status phrase is an error checked by `check_store.py`.
+- **Status.** Use the Stage 1 [status vocabulary](store.md), including `candidate` for an inferred lesson. Decisions explicitly recorded in attributed minutes carry the decider and note-taker in their status. Apply the same authority and supersession rules as for other decisions by that decider.
 - **Inferences.** Inferred details, such as a calendar date calculated from a relative weekday (`Friday is 2026-02-27 (inferred)`), are allowed on a subject page only when tagged `(inferred)` beside the source's exact words. Never replace the source's words with an untagged inference.
 - **Since.** The event date of the evidence that set the current status.
 - **Evidence links.** For each supporting record, a link to the raw source lines and a link to the evidence document, separated by `; ` between sources:
@@ -291,178 +295,30 @@ History is one table, kept in event-date order, with the same order rules as abo
 | <event date> | [<source label>](<link to evidence document>) `<sha12>` | [L41-L52](<link to source>#L41-L52) | <change> | <what changed> | <ingested date> |
 ```
 
-- **Source.** A link to the evidence document and the first 12 hex characters of the source's sha256 in a code span. For a change made on the owner's direct instruction in the run, write `owner instruction` and put `-` in Lines.
-- **Lines.** One link per line range of the record.
+- **Source.** A link to the evidence document and the first 12 hex characters of the source's sha256 in a code span. For a change made on the owner's direct instruction in the run, write `owner instruction` and link the replayable journal entry in Lines.
+- **Lines.** One link per line range of the record. When held records share the same spans, link the Source cell to the specific record heading in the evidence document or include its heading in What changed (Record on the holding page). Repair that reference if the heading changes.
 - **Change.** Exactly one of `added`, `corroborated`, `revised`, `superseded`, `conflict`, `resolved`, `status`, `corrected`, `withdrawn`, `moved`, `evidence removed`.
 - **What changed.** One short clause naming the item and the change, for example `Row limit 50,000 per export added` or `Nightly batch decision superseded by streaming (inferred from date order)`. Do not restate the record.
 - A record usually gives one row per page. A record with two effects on one page, such as superseding one item and adding another, gives one row per effect.
 
-### Retired page
+## Routine ingestion
 
-```markdown
----
-type: <type>
-title: "<current name>"
-description: "Merged into <id> on <event date>."
-timestamp: <ISO 8601 with offset, last update>
-id: <type>/<slug>
-aliases: ["<name as a source uses it>"]
-status: merged into <id>
-scope: []
-evidence_through: <latest event date applied>
----
-
-# <title>
-
-Merged into [<title>](<link to page>) on <event date>, <evidence links or "owner instruction">. Its items moved there.
-
-## History
-```
-
-For a split, write `split into <id>, <id>` and link each successor.
-
-## Registry, ledger and holding page
-
-Create each file from its template when it is first needed. Keep the front matter and update `timestamp` on every change.
-
-`docs/knowledge/subjects.md`, one row per subject, sorted by ID:
-
-```markdown
----
-type: subject-registry
-title: "Subject registry"
-description: "Every subject page in this knowledge store, with its ID, aliases, scope and status."
-timestamp: <ISO 8601 with offset, last update>
----
-
-# Subject registry
-
-| ID | Type | Title | Aliases | Scope | Status | Page |
-|---|---|---|---|---|---|---|
-| <type>/<slug> | <type> | <title> | <name as a source uses it>; <name as a source uses it> | <broader subject id> | active | [<slug>](<type>s/<slug>.md) |
-```
-
-Separate aliases with `; ` and scope IDs with `, `. Write `-` in an empty cell. Status is `active`, `merged into <id>` or `split into <id>, <id>`.
-
-`docs/knowledge/sources.md`, one row per distinct source, sorted by event date, then path, with `unknown` dates last:
-
-```markdown
----
-type: source-ledger
-title: "Source ledger"
-description: "Every source the extraction skills have listed, its stage, its evidence document and the subjects it touched."
-timestamp: <ISO 8601 with offset, last update>
----
-
-# Source ledger
-
-| Source | sha256 (first 12) | Event date | Date basis | Ingested | Stage | Evidence | Subjects |
-|---|---|---|---|---|---|---|---|
-| `<repository-relative path>` | `<sha12>` | <event date> | <date basis> | <ingested date> | <stage> | [<source label>](<link to evidence document>) | <subject ids> |
-```
-
-- **Source.** Every path with these bytes, each in a code span, separated by `; `.
-- **Date basis.** Where the event date comes from: `stated in text (L4)`, `file name`, `export date` or `unknown`.
-- **Ingested.** The date the source was first listed.
-- **Stage.** `listed`, `compressed`, `extracted`, `routed`, `superseded by <sha12>`, `removed <date>` or `skipped: <reason>`.
-- **Evidence.** A link to the evidence document from here (`../extractions/<path>`), or `-` before Stage 2.
-- **Subjects.** Every subject ID whose page History cites this source, separated by `, `, plus `unassigned` if the holding page holds one of its records. `-` if none.
-
-`docs/knowledge/unassigned.md`:
-
-```markdown
----
-type: holding-page
-title: "Unassigned records"
-description: "Actionable records whose subject the evidence does not yet establish."
-timestamp: <ISO 8601 with offset, last update>
----
-
-# Unassigned records
-
-| Added | Source | Lines | Record | Candidate subjects | Why unassigned |
-|---|---|---|---|---|---|
-| <ingested date> | [<source label>](<link to evidence document>) `<sha12>` | [L41-L52](<link to source>#L41-L52) | <record heading> | <subject ids or names> | <reason> |
-```
-
-From these three files, an evidence document is `../extractions/<path>` and a raw source is `../../<repository-relative path>`. On every run, check each holding row against the new evidence. When a source establishes the subject, apply the record to that page at its own event date with Change `added`, delete the holding row, and update the ledger row's Subjects.
-
-## Runs
-
-### Before any run
-
-1. Read the ledger, the registry and the holding page if they exist.
-2. **Migration.** Find every evidence document under `docs/extractions/` whose sha256 has no ledger row. Add a row with the paths from its front matter `source`, the first 12 characters of its front matter `sha256`, its event date and date basis from its About section, today as Ingested, Stage `extracted`, and its Evidence link. Do not rewrite the document.
-3. **Resume.** A row in `listed` needs Stage 1. A row in `compressed` needs Stage 2. A row in `extracted` needs Stage 3. Continue each from its stage. Before Stage 1, check `compressed/` for a compression with that sha256; if one exists and its Read line is complete, set the row to `compressed`.
-
-### Routine ingestion of one new source
-
-1. Stage 1 and Stage 2 as in [store.md](store.md). Stage 2 writes the ledger row as `extracted`.
+1. Follow [Stage 1](store.md) and [Stage 2](evidence.md). Stage 2 writes the ledger row as `extracted`.
 2. Read the registry, the holding page, and the new evidence document's records and Subjects it names section.
 3. For each actionable record, name its subjects, match them against the registry, and decide: an existing subject, a new subject, or the holding page.
 4. Group the routed records by subject. For each subject, read only its page, apply its records in event-date order with the update rules, and write the page once. Set `evidence_through` to the latest event date applied, and update `timestamp` and `aliases`.
-5. Update the registry, the holding page and the indexes. On each subject type folder's `index.md`, copy every page's front matter `description` word for word whenever the page is created or its `description` changes. Set the ledger row to `routed` and fill its Subjects.
-6. Add one bullet to `docs/log.md` under today's `## YYYY-MM-DD` heading naming the sources routed and the subject pages created or changed.
+5. Update the registry, the holding page and any project-required indexes. On each existing subject type folder's `index.md`, copy every page's front matter `description` word for word whenever the page is created or its `description` changes. Set the ledger row to `routed` and fill its Subjects.
+6. If the target uses `docs/log.md`, add one bullet under today's `## YYYY-MM-DD` heading naming the sources routed and the subject pages created or changed.
 7. Run the finish checklist.
 
-### Backfill of many sources
-
-1. List every file under the given roots with its sha256 and event date. Add a ledger row for each as `listed`. Record skipped files as `skipped: <reason>`.
-2. Run Stage 1 on every `listed` row. Many sources can run in parallel. Only the agent running the backfill writes the ledger: after each compression is written, it sets that row to `compressed`.
-3. Run Stage 2 per source in event-date order, setting each row to `extracted`.
-4. Run Stage 3 per subject, not per source. First route every record of every `extracted` source to its subjects or to the holding page. Then update each subject page once, applying all of its new records in event-date order. Set each source's row to `routed` once all of its records are applied.
-5. If the run stops, the next run resumes from the ledger.
-
-### Duplicate ingestion
-
-The same bytes under a new path are one source. Add the path to the ledger row's Source cell, to the compression's `source` list, and to the evidence document's front matter `source` list, and add a `docs/log.md` bullet `Duplicate of <sha12> at <path>`. Nothing else changes. A record whose source hash and line range already appear in a page's History changes nothing.
-
-### Source edit
-
-The ledger shows a known path with a new hash.
-
-1. Set the old row's Stage to `superseded by <sha12>`, replace its Evidence link with plain text `<path> (rewritten for <sha12>; earlier text in git)` so the old row does not link the rewritten document, and add a row for the new hash as `listed`.
-2. Re-run Stages 1 and 2 in place.
-3. For each subject in the old row's Subjects, re-check every item that cites the old hash. Point its line links at the new text; re-pointing line links without changing any specific needs no History row. Revise changed specifics with a `corrected` History row that cites the new hash. Move items that lost their only support to Superseded and withdrawn with a `corrected` row.
-4. In History rows that cite the old hash, replace each line link with its plain text, such as `L120-L130`. The links would now point into the edited text.
-5. Route new records as in routine ingestion.
-
-Git keeps the earlier text when the source is committed. If it is not committed, add `earlier version not retained` to the old row's Date basis.
-
-### Source deletion
-
-Only on the owner's explicit request naming the source.
-
-1. Set the ledger row's Stage to `removed <date>`.
-2. For each subject in its Subjects, remove from the current state every item whose only support was that source, with an `evidence removed` History row. Remove that source's evidence links from items that keep other support.
-3. If the reason is privacy, also delete its compression and evidence document, and write What changed without restating the removed content.
-4. Replace each link to a deleted file with its plain text, in History rows, the holding page, the ledger and other evidence documents. `check_store.py` lists the links that no longer resolve.
-5. Tell the owner that git history still holds the old text, and that erasing it needs a separate history rewrite they authorize.
-
-### Rebuild of one subject
-
-1. Take every source whose ledger Subjects include the subject.
-2. Read their records from the evidence documents, apply them to an empty page of the same ID in event-date order with the update rules, and carry over the `owner instruction` rows from the old History.
-3. Keep the Ingested date of each History row that already existed with the same source and lines.
-4. Write the rebuilt page in place and report the differences against the old page, especially specifics that one version has and the other lacks.
-
-A rebuild never touches raw sources or evidence documents. A rebuilt page is current as of its latest evidence, not a timeless truth.
-
-### As-of reconstruction
-
-There is no query service. To find what was current on a date, read History up to that date with the Superseded and withdrawn section. To find what the knowledge base said on a date, use `git log` and `git show` on the page.
+See the [table templates](tables.md) for the registry, ledger and holding page. Use [maintenance.md](maintenance.md) for replays, edits, migrations, backfills or retirement.
 
 ## Consumers
 
-Coding and enterprise-automation agents read the same pages. Do not write a copy per role.
+Coding agents use requirements, interfaces and validation on feature pages. SREs use service constraints, attempts and recovery evidence. Assistants use procedure steps, accepted ownership and open work. All three follow canonical links and the repository’s access permissions.
 
-- A coding agent starts at a feature page: Current state, Constraints and procedures that apply, Validation, and Open items and conflicts. It follows a procedure link only when its task includes that procedure.
-- An enterprise-automation agent starts at a procedure page and the Ownership, handoffs and work status section of the features it serves.
-- Neither role owns a subject. Relevance does not grant access. The store records access restrictions that sources state. The repository's own permissions are the only enforcement.
+## Finish
 
-## Finish checklist
+Check each routed record against page History or the holding page, including each effect on each item. Check the ledger and registry and update any project-required indexes and changelog. Run the loaded skill’s own [scripts/check_store.py](../scripts/check_store.py) with Python 3 and `--root` pointing to the target repository. Fix errors and review warnings.
 
-1. Every routed record is on a subject page or the holding page, and every page you changed has a History row for each change.
-2. The registry, the ledger and the indexes list every page and source you added or changed. `docs/index.md` links `knowledge/index.md`.
-3. Run the checker in this skill's `scripts/` folder from the repository root, for example `python3 -I .claude/skills/extract-meeting-notes/scripts/check_store.py --root .`, and fix every error it reports. Read each warning and fix it or say why it stays.
-4. Report the sources processed, the subject pages created or updated, the items left on the holding page, and the ledger's counts by stage.
+Leave `docs/extractions/` and `docs/knowledge/` uncommitted for human `git diff` review unless the user explicitly asks to commit. Report `git diff --stat HEAD -- docs/knowledge/` and list new untracked files separately with `git ls-files --others --exclude-standard -- docs/extractions/ docs/knowledge/`. Report sources, relations, subject and holding-page changes, stage counts and remaining gaps.

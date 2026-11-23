@@ -1,11 +1,11 @@
 ---
 name: direct-answers
-description: Answer agent questions directly and stop once they are answered. Cut repetition, unsolicited expansion, and implementation clutter while keeping details that change the answer. Combines concise explanation with boss-brief's decision-level framing. Use for status, recommendations, technical explanations, follow-up clarifications, or complaints about verbose, confusing, or patronizing responses. Provide depth when explicitly requested.
+description: Shorten or clarify an established answer when the reader asks for brevity, simpler wording or a concise confirmation.
 ---
 
 # Direct answers
 
-Answer what the user asked, then stop. The goal is to resolve their question, not to deliver everything relevant to the topic. One long paragraph is still a long answer.
+Use this editing pass once the substance is established. Preserve the evidence and conditions needed to interpret the answer. The goal is to resolve their question, not to deliver everything relevant to the topic. One long paragraph is still a long answer.
 
 ## Find the gap
 
@@ -23,7 +23,7 @@ Answer what the user asked, then stop. The goal is to resolve their question, no
 - Keep a caveat where omitting it would change the meaning. Cut ritual reminders such as "this does not prove success" when you have already said the experiment never ran and the user is only asking what was done.
 - Do not enforce a paragraph, sentence, or word quota. Stop based on whether the question is answered. A requested deep explanation can be long without being padded.
 
-## Keep the boss-brief substance where it matters
+## Keep details that change the answer
 
 For a decision, explain the consequence for the team and the mechanism behind it, not your execution sequence. State what a tool supplies, what the team still owns, and the comparison that changes the recommendation when those facts affect the decision. These are relevance checks, not sections to fill in every response.
 

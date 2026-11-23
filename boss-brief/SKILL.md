@@ -1,11 +1,11 @@
 ---
 name: boss-brief
-description: Use when updating a non-technical owner on project status, results, or decisions. Give the big picture in plain words first, then one clear next step. Strip jargon, hashes, internal labels, and metrics unless the owner asks for them.
+description: Give a non-technical project owner a plain-language status update and the next decision or action.
 ---
 
 # Boss brief
 
-Talk to the owner like a boss, not a spec. Big picture first, plain words, one decision at a time.
+Use this format only for project status updates to a non-technical owner. Lead with the current outcome and the next action.
 
 ## Rules
 

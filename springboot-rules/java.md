@@ -4,7 +4,7 @@ Rules for Java itself, whatever the framework.
 
 ## J-01: Close resources with try-with-resources
 
-- **Source:** *Effective Java*, 3rd edition (Joshua Bloch), Item 9, "Prefer try-with-resources to try-finally". Spring rule pack J-01 in the superproject's `docs/pipeline/spring-boot-rule-pack.md`.
+- **Source:** *Effective Java*, 3rd edition (Joshua Bloch), Item 9, "Prefer try-with-resources to try-finally".
 - **Prose:** Open every `AutoCloseable` (streams, readers, writers, JDBC connections, statements, result sets, `Scanner`) in a try-with-resources statement. Don't close it by hand in a `finally` block, and don't leave it unclosed.
 
 ```java

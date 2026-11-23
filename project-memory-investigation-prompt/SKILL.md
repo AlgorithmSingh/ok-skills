@@ -1,11 +1,13 @@
 ---
 name: project-memory-investigation-prompt
-description: Create a project-specific investigation prompt for extracting knowledge, execution experience, user steering, recurring agent behavior, and unresolved work from session history. Use when asked to prepare this research for a new project or a later update. Produces the research assignment, launch directory, and artifact locations; does not launch extraction or build a memory system.
+description: Draft a project-specific research assignment for investigating session history when the requested deliverable is the prompt itself.
 ---
 
 # Project memory investigation prompt
 
 Turn the owner's wish to learn from a project's agent sessions into a concrete, evidence-backed research assignment. Write the investigation prompt itself. Do not merely explain the method, generate another assignment to write a prompt, or launch the investigation.
+
+For immediate extraction into a maintained subject store, use [extract-session-details](../extract-session-details/SKILL.md). For a branch map and open threads, use [session-forks](../session-forks/SKILL.md).
 
 The reusable design is: learning goal, seven extraction categories, evidence rules, project-specific scope, and explicit artifacts. Adapt the project facts and success distinctions. Keep that research design intact.
 
@@ -31,16 +33,16 @@ The prompt file may live wherever the owner requests, including a shared notes f
 
 The authoritative analysis belongs in the canonical project's own repository. Default to `<project-root>/docs/session-memory/<run-date>/`, following its documentation conventions. Reading shared transcripts, or saving the prompt beside them, does not make that shared workspace the owner of the analysis. Do not put the primary results in another repository, a viewing copy, or ignored scratch. Only an explicit owner instruction about the analysis destination overrides this rule.
 
-Require the researcher to commit and push the analysis and required documentation navigation/log changes in that project, staging only those paths. Save its own session transcripts separately according to project rules. Preserve prior prompts and research snapshots; updates use a new dated directory.
+Leave the analysis and navigation changes uncommitted for human diff review. Commit or publish only on explicit request. Save its own session transcripts separately according to project rules. Preserve prior prompts and research snapshots; updates use a new dated directory.
 
 ## Ground the assignment
 
-1. Read applicable repository instructions, the session-start guide, and relevant owner-brief or decision entry points. Check repository metadata to resolve aliases, mergers, legacy roots, and viewing copies. Do not pull unrelated projects or download large artifacts for prompt preparation.
-2. Identify the project's transcript and scratch directories, documented session-discovery tools, check-in records, shared workspace archives, and permitted native agent logs. Follow existing indexes and references. Do not scan the entire home directory or authentication stores.
+1. Read applicable repository instructions, the project README and relevant decision records. Check repository metadata to resolve aliases, mergers, legacy roots, and viewing copies. Do not pull unrelated projects or download large artifacts for prompt preparation.
+2. Identify the project's transcript and scratch directories, documented session-discovery tools, indexed archives, and permitted native agent logs. Follow existing indexes and references. Do not scan the entire home directory or authentication stores.
 3. Understand the owner's actual goal and what would count as a useful result. Identify distinctions the researcher must preserve. A passing pipeline is not necessarily an improved model; a completed render is not necessarily a readable scene; an operator demonstration is not owner acceptance.
 4. Establish neighboring-project ownership and access restrictions. Shared technology or keywords do not make another project's history part of this one. Restricted contents stay restricted when copied into a transcript.
 
-Inspect enough to ground the prompt, not the full session corpus. Read-only orientation is not a project-status audit, a new experiment, or permission to resume an old assignment. Treat check-in instructions as source context, not a reason to become the check-in agent.
+Inspect enough to ground the prompt, not the full session corpus. Read-only orientation is not a project-status audit, a new experiment, or permission to resume an old assignment.
 
 ## Write the investigation prompt
 
@@ -52,7 +54,7 @@ Fill in every project-specific section:
 - Concrete source paths and documented discovery routes. Label known but inaccessible sources rather than pretending they were inspected.
 - Relevant project entry-point documents and source-access limitations.
 - What the research should distinguish about this project's goals, outcomes, comparisons, and failures. Ground these concerns in the inspected project material. Do not invent incidents or assume a particular verdict.
-- Separate exact prompt and project-owned research paths, scoped commit/push instructions, run mode, and any previous extraction reference.
+- Separate exact prompt and project-owned research paths, review expectations, run mode, and any previous extraction reference.
 
 Retain the three memory types and seven categories from the template. Do not substitute a generic summary, phase plan, task-contract audit, database design, or prompt-writing workflow. Do not add categories, numerical bars, approval gates, or new infrastructure merely to appear thorough.
 
@@ -84,6 +86,6 @@ Give:
 1. The saved investigation-prompt path.
 2. The verified `cd` command for the canonical project.
 3. A short message to paste into a fresh agent session: "Read and carry out this research assignment: <absolute prompt path>".
-4. The exact project-owned research output directory, its commit/push requirement, and whether the assignment is initial or an update.
+4. The exact project-owned research output directory, its review default, and whether the assignment is initial or an update.
 
 State that extraction has not been launched. Do not install a skill, start an agent, change project rules, or execute the research unless separately requested.

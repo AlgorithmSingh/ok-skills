@@ -1,6 +1,6 @@
 ---
 name: session-forks
-description: Turn one or more session transcripts into a goal-centered ASCII fork map, branch checklist, complete continuation context, and transcript pointers. Use when asked to track conversational branches, recover open threads, prepare an agent handoff, or update an existing conversation map.
+description: Map branching conversations and recover open threads when the user wants a fork map, branch checklist or update to an existing map.
 ---
 
 # Session Forks

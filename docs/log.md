@@ -2,10 +2,11 @@
 
 ## 2026-11-22
 
+- Split the extraction references by stage, documented replay and Git review, and added checker tests, a worked store and six public behavioral fixtures. Updated skill routing, essay guidance and repository-wide checks (`scripts/check_repo.py`).
 - Added [evaluation prompts and checks](../well-defined-objectives/evals/evals.json) for turning vague requests into verifiable objectives.
 - Added `AGENTS.md` requiring the repository to stay standalone and free of machine-local paths or private references. Added [Google Knowledge Catalog vs. ok-skills extraction](essays/knowledge-catalog-vs-extraction-skills.md) and linked it from `README.md` and `docs/essays/index.md`.
 - Updated `extract-session-details` and `extract-meeting-notes` with workflow-scope checks, local-definition capture and linked rule-application rules.
-- Updated `extract-session-details` and `extract-meeting-notes` with the three-stage knowledge store (`references/knowledge.md`, updated `references/store.md`, `scripts/check_store.py`) and contract fixes, keeping the captured-view and research-claim additions from 2026-11-21.
+- Updated `extract-session-details` and `extract-meeting-notes` with the three-stage knowledge store (`references/knowledge.md`, updated `references/store.md`, `scripts/check_store.py`) and contract fixes, keeping the captured-view and research-claim additions.
 
 ## 2026-11-19
 

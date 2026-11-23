@@ -1,23 +1,42 @@
 # ok-skills
 
-Reusable skills and prompts for coding assistants.
+Markdown skills, prompts and rules for working with coding assistants.
 
-## Skills
+## Setup and use
 
-- [well-defined-objectives](well-defined-objectives/SKILL.md): Turn a vague request into a one-sentence objective with success criteria anyone can check, with the method left open. Includes coding examples and the pattern for "find out" tasks.
-- [extract-session-details](extract-session-details/SKILL.md): Extract and store every detail of agent session transcripts, AI chat exports and the documents that come with them: one compression per source in `compressed/`, one linked evidence document per source in `docs/extractions/`, and maintained subject pages for features, services, projects, procedures, decisions and recurring problems under `docs/knowledge/`, with a subject registry, a source ledger, a holding page and `scripts/check_store.py`.
-- [extract-meeting-notes](extract-meeting-notes/SKILL.md): Extract and store every decision, commitment, procedure and open item from meeting notes or transcripts, in the same three-stage store as the session skill.
-- [project-memory-investigation-prompt](project-memory-investigation-prompt/SKILL.md): Prepare an evidence-backed session-history investigation for any project, using three memory types and seven categories. Includes a portable template and initial/update modes. Analysis is committed in the target project's own repository; preparation does not launch extraction.
-- [boss-brief](boss-brief/SKILL.md): Give a non-technical owner a plain-English status update and one clear next step.
-- [direct-answers](direct-answers/SKILL.md): Answer the question directly, preserve details that matter, and stop when it is answered.
-- [task-contract](task-contract/SKILL.md): Compile a request or audit a running session into a binding contract with requirement IDs, independent verification, and durable handoff state.
+In Claude Code, Codex or Gemini CLI, open this clone as a workspace. Ask the assistant to read the linked `SKILL.md` and apply it to a specific task or source. For example, “Read `extract-meeting-notes/SKILL.md` and extract the supplied minutes into my project.” Give the target repository explicitly when it differs from the current workspace. Each extraction skill includes its own references and checker.
 
-## Prompts
+For project-level discovery, copy the complete skill folder to the appropriate directory under the target project's root.
 
-- [Decision handoff](decision-handoff/PROMPT.md): Review owner decisions one at a time, record answers, and hand them back to the working agent.
-- [Decision recap](decision-recap/PROMPT.md): Summarize delegated work as bullet points: what was asked, what was done, the decisions made, and the alternatives.
+| Tool | Project skills directory | Documentation |
+|---|---|---|
+| Claude Code | `.claude/skills/` | [Claude Code skills](https://code.claude.com/docs/en/skills) |
+| Codex | `.agents/skills/` | [Codex local skills](https://developers.openai.com/codex/skills/) |
+| Gemini CLI | `.gemini/skills/` or `.agents/skills/` | [Gemini CLI skills](https://geminicli.com/docs/cli/skills/) |
+
+Paste a decision prompt into an existing conversation. Supply the rule pack as reading material for Java or Spring Boot work. The checkers need Git and Python 3 with the standard library. From the clone root run `python3 -I -B scripts/check_repo.py` and `python3 -I -B -m unittest discover`. Try the extraction checker on the [worked store](examples/mini-store/README.md) or use the [synthetic fixtures](fixtures/README.md) for a behavioral review.
+
+## Which skill to use
+
+| When you need to… | Use |
+|---|---|
+| Diagnose a problem or judge whether a result transfers to your setup | [Answer the actual question](answer-the-actual-question/SKILL.md) |
+| Shorten or clarify an established answer | [Direct answers](direct-answers/SKILL.md) |
+| Give a non-technical owner a status update | [Boss brief](boss-brief/SKILL.md) |
+| Define a verifiable outcome for a task | [Well-defined objectives](well-defined-objectives/SKILL.md) |
+| Track or audit a substantial assignment requirement by requirement | [Task contract](task-contract/SKILL.md) |
+| Build a knowledge store from agent transcripts and supporting documents | [Extract session details](extract-session-details/SKILL.md) |
+| Build the same store from human meeting notes or minutes | [Extract meeting notes](extract-meeting-notes/SKILL.md) |
+| Draft a project-specific assignment for later session-history research | [Project memory investigation prompt](project-memory-investigation-prompt/SKILL.md) |
+| Map a conversation’s branches and recover open threads | [Session forks](session-forks/SKILL.md) |
+
+## Prompts and rule pack
+
+- [Decision handoff](decision-handoff/PROMPT.md) takes outstanding choices to the owner and returns their answers to the working agent.
+- [Decision recap](decision-recap/PROMPT.md) summarizes completed work, decisions and alternatives.
+- The Spring Boot rule pack contains [Java language rules](springboot-rules/java.md) and [Spring Boot rules](springboot-rules/spring-boot.md), with examples for implementation and review.
 
 ## Essays
 
-- [Agent context strategy](docs/essays/agent-context-strategy.md): What to extract from meeting notes and agent sessions for coding, SRE and assistant personas, including what to use, borrow, defer or leave outside scope.
-- [Google Knowledge Catalog vs. ok-skills extraction](docs/essays/knowledge-catalog-vs-extraction-skills.md): Side-by-side comparison of Google Cloud Knowledge Catalog and this repository's extraction skills, highlighting what overlaps, where these skills are stronger, and which gaps are worth reviewing.
+- [Agent context strategy](docs/essays/agent-context-strategy.md) explains what coding, SRE and assistant readers need from meetings and agent sessions.
+- [Google Knowledge Catalog vs. ok-skills extraction](docs/essays/knowledge-catalog-vs-extraction-skills.md) compares the evidence model, authority, review and downstream evaluation of the two systems.

@@ -29,3 +29,5 @@ Do not count a rejected proposal as unanswered, or a partially answered question
 Give me a copyable prompt for the working agent with the full path to the response document. Tell it to begin approved, unblocked work without waiting for every answer, while preserving unresolved approval boundaries.
 
 For later updates, provide a short follow-up directing it to reread the same document. Do not claim a message was sent, work resumed, or a task finished without evidence.
+
+For a retrospective summary of choices already made, use [Decision recap](../decision-recap/PROMPT.md).

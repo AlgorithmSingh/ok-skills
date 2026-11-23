@@ -2,7 +2,7 @@
 
 This excerpt records the public skill additions. The feature commit is `fa2364a`. The two skills package the extraction guidance from the agent context essay and are linked from that essay and the repository README.
 
-Codex session 01a1e9d4-fbe3-75a1-83bf-2549a9fc874d · codex-tui 0.169.0 · models unknown · cwd /Users/ankitsingh · 2026-11-17T14:10:46.792Z → 2026-11-17T23:01:29.201Z
+Codex session 01a1e9d4-fbe3-75a1-83bf-2549a9fc874d · codex-tui 0.169.0 · models unknown · cwd [local path] · 2026-11-17T14:10:46.792Z → 2026-11-17T23:01:29.201Z
 3 prompts, 3 replies, 0 structured results, 0 answers, 0 tool calls; reasoning and injected context omitted.
 --------------------------------------------------------------------------------
 

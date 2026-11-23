@@ -20,11 +20,18 @@ registry and ledger create:
   valid, and page History rows, the holding page and ledger Subjects agree in
   both directions.
 
+- extractions, quotes, freshness, coverage and routing: validate evidence
+  metadata, compare adjacent literals with cited lines, hash active source
+  paths, verify saved read checkpoints and warn about uncited held records.
+
 A missing docs/knowledge/ is not an error. Exit status is 1 when any error is
 found, otherwise 0. Standard library only.
 """
 
 import argparse
+from collections import Counter
+from datetime import date
+import hashlib
 import json
 import os
 import re
@@ -39,75 +46,67 @@ CHANGES = frozenset((
     "status", "corrected", "withdrawn", "moved", "evidence removed",
 ))
 
-# Template tokens used in references/store.md, references/knowledge.md and
-# docs/extraction-prompt.md. tests/extraction-store/test_check_store.py checks
-# that this list covers every token in those files.
+# Literal template fields in the shipped stage references.
 PLACEHOLDERS = frozenset((
+    '<64 hex characters>',
+    '<ISO 8601 with offset, last update>',
+    '<as stated before the outcome was known, with its link>',
+    '<broader subject id>',
+    '<change>',
+    '<current item heading>',
+    '<current name>',
+    '<date basis>',
+    '<date>',
+    '<description>',
+    '<event date>',
+    '<every specific, stated once>',
+    '<evidence links or "owner instruction">',
+    '<evidence links>',
+    '<exact file or source name>',
+    '<feature, service, project, procedure, decision or recurring problem>',
+    '<hash>',
+    '<id>',
+    '<ingested date>',
+    '<intervention, stated as a sentence>',
+    '<kept, revised, replaced or reverted, with link and date>',
+    '<latest event date applied>',
+    '<link to evidence document>',
+    '<link to page>',
+    '<link to source>',
+    '<link>',
+    '<name as a source uses it>',
+    '<name as the source states it>',
+    '<name>',
+    '<note-taker>',
+    '<one sentence: what kind of source it is, its date, and what it covers>',
+    '<one sentence>',
+    '<part>',
+    '<path>',
+    '<reason>',
+    '<record heading>',
+    '<relative link to the source>',
+    '<repository, service, environment, version, model, dataset, date>',
+    '<repository-relative path>',
+    '<restriction as the source states it>',
+    '<result, with its link, and exactly what it covers>',
+    '<sha12>',
+    '<side>',
+    '<slug>',
+    '<source label>',
+    '<stage>',
+    '<status>',
+    '<subject ids or names>',
+    '<subject ids>',
+    '<the point, stated as a sentence>',
+    '<the question, stated as a sentence>',
     "<the source's own title, plus its version if it states one>",
-    "<one sentence: what kind of source it is, its date, and what it covers>",
-    "<repository-relative path>",
-    "<64 hex characters>",
-    "<title>",
-    "<the point, stated as a sentence>",
-    "<relative link to the source>",
-    "<who>",
-    "<status>",
-    "<every specific, stated once>",
-    "<exact file or source name>",
-    "<what the source says about it>",
-    "<record heading>",
-    "<name as the source states it>",
-    "<feature, service, project, procedure, decision or recurring problem>",
-    "<hash>",
-    "<name>",
-    "<link>",
-    "<part>",
-    "<type>",
-    "<slug>",
-    "<id>",
-    "<sha12>",
-    "<date>",
-    "<reason>",
-    "<current name>",
-    "<one sentence>",
-    "<ISO 8601 with offset, last update>",
-    "<name as a source uses it>",
-    "<broader subject id>",
-    "<latest event date applied>",
-    "<event date>",
-    "<evidence links>",
-    "<link to source>",
-    "<link to page>",
-    "<link to evidence document>",
-    "<source label>",
-    "<restriction as the source states it>",
-    "<intervention, stated as a sentence>",
-    "<why, as the source gives it>",
-    "<as stated before the outcome was known, with its link>",
-    "<result, with its link, and exactly what it covers>",
-    "<repository, service, environment, version, model, dataset, date>",
-    "<kept, revised, replaced or reverted, with link and date>",
-    "<the question, stated as a sentence>",
-    "<side>",
-    "<who, with link, or \"no one in the evidence\">",
-    "<current item heading>",
-    "<change>",
-    "<what changed>",
-    "<ingested date>",
-    "<evidence links or \"owner instruction\">",
-    "<date basis>",
-    "<stage>",
-    "<subject ids>",
-    "<subject ids or names>",
-    "<path>",
-    "<skill directory>",
-    "<repository root>",
-    "<description>",
-    "<source path>",
-    "<source folder>",
-    "<paths of the sources>",
-    "<where the files go, or the defaults below>",
-    "<coding, enterprise automation, SRE, assistant; their tasks if known>",
+    '<title>',
+    '<type>',
+    '<what changed>',
+    '<what the source says about it>',
+    '<who, with link, or "no one in the evidence">',
+    '<who>',
+    '<why, as the source gives it>',
 ))
 
 ID_RE = re.compile(r"^(%s)/[a-z0-9]+(?:-[a-z0-9]+)*$" % "|".join(TYPES))
@@ -127,11 +126,12 @@ SCHEME_RE = re.compile(r"^[A-Za-z][A-Za-z0-9+.-]*:")
 LINE_ANCHOR_RE = re.compile(r"^L(\d+)(?:-L(\d+))?$")
 ITEM_STATUS_RE = re.compile(
     r"^(?:"
-    r"(?:proposed|withdrawn|deferred|open|observed|reported|second-hand"
-    r"|second-hand and reported|requested|submitted|approved|rejected"
+    r"(?:candidate|proposed|withdrawn|deferred|open|observed|reported|second-hand"
+    r"|second-hand and reported(?: by [^;]+)?|requested|submitted|approved|rejected"
     r"|completed|verified|assigned|accepted|superseded)"
     r"|superseded \(inferred from date order\)"
-    r"|(?:proposed|decided|accepted|rejected|stated|requested|withdrawn"
+    r"|decided by [^();]+(?: \(per minutes by [^();]+\))?"
+    r"|(?:proposed|accepted|rejected|stated|requested|withdrawn"
     r"|deferred|observed|reported|submitted|approved|completed|verified"
     r"|assigned|claimed) by [^;]+"
     r"|(?:second-hand|requested|submitted|approved|rejected|completed"
@@ -207,8 +207,8 @@ def read_text(path):
     return path.read_text(encoding="utf-8", errors="replace")
 
 
-def strip_code_spans(line):
-    """Replace inline code spans with a space; keep unmatched backticks."""
+def strip_code_spans(line, preserve_offsets=False):
+    """Mask inline code, optionally keeping match offsets in the original line."""
     out = []
     i, n = 0, len(line)
     while i < n:
@@ -237,7 +237,7 @@ def strip_code_spans(line):
             out.append(run)
             i = j
         else:
-            out.append(" ")
+            out.append(" " * (found + len(run) - i) if preserve_offsets else " ")
             i = found + len(run)
     return "".join(out)
 
@@ -341,7 +341,7 @@ def parse_scalar(value):
 
 def parse_inline_list(value):
     inner = value.strip()[1:-1]
-    items = re.findall(r'"((?:[^"\\]|\\.)*)"|\'([^\']*)\'|([^,]+)', inner)
+    items = re.findall(r'\s*(?:"((?:[^"\\]|\\.)*)"|\'([^\']*)\'|([^,]+))', inner)
     out = []
     for dq, sq, bare in items:
         item = dq.replace('\\"', '"') if dq else (sq or bare.strip())
@@ -403,6 +403,12 @@ class Files:
     def __init__(self, root):
         self.root = root
         self._lines = {}
+        self._text_lines = {}
+
+    def excerpt(self, path, start, end):
+        if path not in self._text_lines:
+            self._text_lines[path] = read_text(path).splitlines()
+        return "\n".join(self._text_lines[path][start - 1:end])
 
     def line_count(self, path):
         if path not in self._lines:
@@ -429,7 +435,7 @@ def resolve_link(root, source_file, target):
         joined = os.path.join(str(root), path_part.lstrip("/"))
     else:
         joined = os.path.join(str(source_file.parent), path_part)
-    normal = Path(os.path.normpath(joined))
+    normal = Path(joined).resolve()
     try:
         normal.relative_to(root)
     except ValueError:
@@ -590,6 +596,9 @@ def load_store(report, files, root, knowledge):
                     "where": "%s:%d" % (rel(root, holding_file), number),
                     "sha": cell_sha(cells[1]),
                     "added": plain(cells[0]),
+                    "lines": cells[2],
+                    "source_cell": cells[1],
+                    "record": cells[3],
                 })
 
     for kind in TYPES:
@@ -632,6 +641,9 @@ def check_registry(report, root, knowledge, store):
         report.count("registry")
         if not page["has_fm"]:
             report.error("registry", where, "no front matter")
+        through = page["fm"].get("evidence_through")
+        if through is not None and not valid_date(through):
+            report.error("registry", where, "invalid evidence_through date")
         fm_id = page["fm"].get("id")
         if fm_id != sid:
             report.error("registry", where,
@@ -745,20 +757,27 @@ def check_ledger(report, root, knowledge, store):
             report.error("ledger", where, "duplicate sha256 prefix %s" % sha)
         else:
             by_sha[sha] = row
-        if not DATE_RE.match(row["event_date"]):
+        if not valid_date(row["event_date"]):
             report.error("ledger", where, "Event date %r is not an ISO date or "
                          "unknown" % row["event_date"])
-        if not DAY_RE.match(row["ingested"]):
+        if not valid_date(row["ingested"], day=True):
             report.error("ledger", where, "Ingested %r is not YYYY-MM-DD" %
                          row["ingested"])
-        if not STAGE_RE.match(row["stage"]):
+        if not STAGE_RE.fullmatch(row["stage"]) or (
+                row["stage"].startswith("removed ") and not valid_date(row["stage"][8:], day=True)):
             report.error("ledger", where, "unknown Stage %r" % row["stage"])
+        if row["stage"] in ("extracted", "routed") and not row["evidence_target"]:
+            report.error("ledger", where, "advanced stage requires an evidence link")
         if row["evidence_target"]:
             path, _, problem = resolve_link(root, ledger_file,
                                             row["evidence_target"])
             if path is None or problem or not path.is_file():
                 report.error("ledger", where, "evidence link %r does not "
                              "resolve to a file" % row["evidence_target"])
+            elif row["stage"] in ("extracted", "routed"):
+                evidence_hash = (front_matter(read_text(path)) or {}).get("sha256")
+                if not isinstance(evidence_hash, str) or evidence_hash.lower()[:12] != sha:
+                    report.error("ledger", where, "linked evidence has a different source hash")
         elif plain(row["evidence_cell"]) not in ("", "-") and not (
                 row["stage"].startswith("superseded by ")
                 and "rewritten for " in plain(row["evidence_cell"])):
@@ -777,13 +796,13 @@ def check_ledger(report, root, knowledge, store):
             cells = entry["cells"]
             where = "%s:%d" % (rel(root, page["path"]), entry["line"])
             report.count("ledger")
-            if not DATE_RE.match(plain(cells[0])):
+            if not valid_date(plain(cells[0])):
                 report.error("ledger", where, "History Event date %r is not an "
                              "ISO date or unknown" % plain(cells[0]))
             if plain(cells[3]) not in CHANGES:
                 report.error("ledger", where, "Change %r is not one of: %s" % (
                     plain(cells[3]), ", ".join(sorted(CHANGES))))
-            if not DAY_RE.match(plain(cells[5])):
+            if not valid_date(plain(cells[5]), day=True):
                 report.error("ledger", where, "History Ingested %r is not "
                              "YYYY-MM-DD" % plain(cells[5]))
             if plain(cells[1]) == "owner instruction":
@@ -804,6 +823,8 @@ def check_ledger(report, root, knowledge, store):
     held = set()
     for entry in store["holding"]:
         report.count("ledger")
+        if not valid_date(entry["added"], day=True):
+            report.error("ledger", entry["where"], "invalid holding Added date")
         sha = entry["sha"]
         if sha is None:
             report.error("ledger", entry["where"], "holding row Source has no "
@@ -830,6 +851,163 @@ def check_ledger(report, root, knowledge, store):
             elif sid in registry and sid not in pages:
                 report.error("ledger", row["where"], "Subjects lists %s but "
                              "its page does not exist" % sid)
+
+
+def valid_date(value, day=False):
+    if not isinstance(value, str) or not (DAY_RE if day else DATE_RE).fullmatch(value):
+        return False
+    if value == "unknown":
+        return True
+    parts = [int(part) for part in value.split("-")]
+    try:
+        date(*(parts + [1] * (3 - len(parts))))
+    except ValueError:
+        return False
+    return True
+
+
+def source_path(root, value):
+    if not isinstance(value, str) or not value or Path(value).is_absolute():
+        return None
+    path = (root / value).resolve()
+    if root in path.parents and path.is_file():
+        return path
+    return None
+
+
+def check_extractions(report, root, docs):
+    for path in markdown_files(docs / "extractions"):
+        if path.name == "index.md":
+            continue
+        where = rel(root, path)
+        fields = front_matter(read_text(path)) or {}
+        report.count("extractions")
+        if fields.get("type") != "source-extraction":
+            report.error("extractions", where, "expected type: source-extraction")
+        if not re.fullmatch(r"[0-9a-fA-F]{64}", str(fields.get("sha256", ""))):
+            report.error("extractions", where, "expected a 64-hex sha256")
+        sources = fields.get("source", [])
+        if isinstance(sources, str):
+            sources = [sources]
+        if not sources or any(source_path(root, value) is None for value in sources):
+            report.error("extractions", where, "source must name existing repository files")
+
+
+# Only adjacent, delimited literals assert exact wording. Match on the original
+# text, but locate links on a same-width mask so code examples stay inert.
+LITERAL = r"""(?:"([^"\n]+)"|“([^”\n]+)”|(?<!\w)'([^'\n]+)'|‘([^’\n]+)’|(`+)([^`\n]+)\5)"""
+BEFORE_LINK = re.compile(LITERAL + r"\s*(?:[—–·,:;-]\s*)?[(]?\s*$")
+AFTER_LINK = re.compile(r"^\s*(?:[—–·,:;-]\s*)?" + LITERAL)
+
+
+def check_quotes(report, files, root, page):
+    for number, line in unfenced_lines(read_text(page)):
+        mask = strip_code_spans(line, preserve_offsets=True)
+        for link in LINK_RE.finditer(mask):
+            path, fragment, problem = resolve_link(root, page, link.group(1))
+            span = LINE_ANCHOR_RE.fullmatch(fragment or "")
+            if problem or not span or not path.is_file():
+                continue
+            start, end = int(span[1]), int(span[2] or span[1])
+            for match in (BEFORE_LINK.search(line[:link.start()]),
+                          AFTER_LINK.match(line[link.end():])):
+                if match:
+                    value = match[1] or match[2] or match[3] or match[4] or match[6]
+                    report.count("quotes")
+                    if value not in files.excerpt(path, start, end):
+                        report.error("quotes", "%s:%d" % (rel(root, page), number),
+                                     "literal %r absent from %s" % (value, link.group(1)))
+
+
+def check_source_bytes(report, files, root, row):
+    if row["stage"].startswith(("removed ", "superseded by ")):
+        return
+    if not row["source"]:
+        report.error("freshness", row["where"], "active source row has no paths")
+    for value in row["source"]:
+        path = source_path(root, value)
+        report.count("freshness")
+        if path is None:
+            report.error("freshness", row["where"], "missing source %r" % value)
+            continue
+        with path.open("rb") as stream:
+            digest = hashlib.sha256()
+            for block in iter(lambda: stream.read(1024 * 1024), b""):
+                digest.update(block)
+        if digest.hexdigest()[:12] != row["sha"]:
+            report.error("freshness", row["where"], "stale source hash for %s" % value)
+        compression = source_path(root / "compressed", value)
+        if compression is None:
+            continue  # A fresh checkout need not include uncommitted compressions.
+        check_quotes(report, files, root, compression)
+        if row["stage"] not in ("compressed", "extracted", "routed"):
+            continue
+        text = read_text(compression)
+        about = re.split(r"(?m)^## (?!About this source)", text, maxsplit=1)[0]
+        coverage = re.search(r"(?im)^\s*(?:[-*]\s*)?Read:\s*lines\s+1-(\d+)\s+of\s+(\d+)\b", about)
+        report.count("coverage")
+        if (not coverage or re.search(r"(?im)^\s*(?:[-*]\s*)?(?:(?:Read|Status):.*\bunfinished\b|unfinished\b)", about)
+                or int(coverage[1]) != int(coverage[2])
+                or int(coverage[2]) != files.line_count(path)):
+            report.error("coverage", rel(root, compression),
+                         "unfinished or incomplete read at stage %s" % row["stage"])
+
+
+def record_citations(text):
+    """Yield held record headings and their primary raw-line links."""
+    in_records = False
+    heading = None
+    for number, line in unfenced_lines(text):
+        if line.startswith("## "):
+            in_records = bool(re.fullmatch(r"## Records(?:: .+)?\s*", line))
+            heading = None
+        elif in_records and line.startswith("### "):
+            heading = line[4:].strip()
+        elif heading and line.strip():
+            status = line.rsplit(" · ", 1)[-1].strip().strip("`")
+            if status not in ("illustrative", "background"):
+                yield number, heading, cell_links(line)
+            heading = None
+
+
+def check_routing(report, root, store):
+    _, ledger_file, holding_file = store["files"]
+    citations = {}
+    for page in store["pages"].values():
+        for entry in page["history"]:
+            _, source, lines, _, effect, _ = entry["cells"]
+            citations.setdefault(cell_sha(source), []).append((page["path"], source, lines, effect))
+    for entry in store["holding"]:
+        citations.setdefault(entry["sha"], []).append(
+            (holding_file, entry["source_cell"], entry["lines"], entry["record"]))
+    for row in store["ledger"]:
+        if row["stage"] != "routed" or not row["evidence_target"]:
+            continue
+        evidence, _, problem = resolve_link(root, ledger_file, row["evidence_target"])
+        if not evidence or problem or not evidence.is_file():
+            continue
+        references = []
+        for page, source, lines, label in citations.get(row["sha"], []):
+            locators = {repo_path(root, page, t) for t in cell_links(lines)}
+            evidence_links = {repo_path(root, page, t) for t in cell_links(source)}
+            references.append((locators, evidence_links, plain(label).casefold()))
+        records = []
+        span_counts = Counter()
+        for number, heading, targets in record_citations(read_text(evidence)):
+            spans = frozenset(repo_path(root, evidence, t) for t in targets if "#L" in t)
+            records.append((number, heading, spans))
+            span_counts[spans] += 1
+        for number, heading, spans in records:
+            report.count("routing")
+            anchor = re.sub(r"[^\w -]", "", heading.lower()).replace(" ", "-")
+            record_link = rel(root, evidence) + "#" + anchor
+            matched = any(
+                record_link in links or (spans and spans <= locators and
+                    (span_counts[spans] == 1 or heading.casefold() in label))
+                for locators, links, label in references)
+            if not matched:
+                report.warn("routing", "%s:%d" % (rel(root, evidence), number),
+                            "no matching History or holding citation for %r" % heading)
 
 
 # ---------------------------------------------------------------- export
@@ -891,7 +1069,7 @@ def export(root, knowledge, store, directory):
 # ---------------------------------------------------------------- main
 
 def check(root, export_dir=None):
-    root = Path(os.path.abspath(root))
+    root = Path(root).resolve()
     report = Report()
     docs = root / "docs"
     if not docs.is_dir():
@@ -900,6 +1078,10 @@ def check(root, export_dir=None):
     files = Files(root)
     check_links(report, files, root, docs)
     check_placeholders(report, root, docs)
+    check_extractions(report, root, docs)
+    for folder in ("extractions", "knowledge"):
+        for page in markdown_files(docs / folder):
+            check_quotes(report, files, root, page)
     knowledge = docs / "knowledge"
     if not knowledge.is_dir():
         report.note("knowledge: docs/knowledge/ not present, store checks "
@@ -919,6 +1101,9 @@ def check(root, export_dir=None):
     report.count("ledger", 0)
     check_registry(report, root, knowledge, store)
     check_ledger(report, root, knowledge, store)
+    for row in store["ledger"]:
+        check_source_bytes(report, files, root, row)
+    check_routing(report, root, store)
     if export_dir is not None:
         n = export(root, knowledge, store, Path(export_dir))
         report.note("export: %d subjects, %d sources, %d history rows to %s"

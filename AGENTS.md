@@ -13,5 +13,5 @@ This repository is public and standalone. Anyone cloning it onto a new machine m
 ## Documentation and checks
 
 - Keep `README.md`, `docs/index.md`, `docs/essays/index.md`, and `docs/log.md` updated when adding or changing skills, prompts, or essays.
-- Before committing, verify that relative Markdown links resolve inside this repository and scan changed files for machine-local paths, private repository names, hostnames, and credentials.
-- If a change touches `extract-meeting-notes` or `extract-session-details`, keep their shared `references/store.md`, `references/knowledge.md`, and `scripts/check_store.py` files identical across both skills.
+- Before committing, run `python3 -I -B scripts/check_repo.py` and `python3 -I -B -m unittest discover` to verify YAML frontmatter, relative Markdown links, README coverage, mirror byte-identity, and the absence of machine-local paths, private repository names, hostnames, and credentials.
+- If a change touches `extract-meeting-notes` or `extract-session-details`, keep their shared `references/` and `scripts/` files identical across both skills.

@@ -1,6 +1,6 @@
 ---
 name: task-contract
-description: Turn a request or a running agent session into a binding Task Contract with stable requirement IDs, preserved decisions, independent verification, and durable handoff state. Use when starting a substantial coding task, auditing work after hours or days, recovering from compaction or a new session, or when an agent has drifted from the user's requirements.
+description: Compile or audit a substantial multi-requirement assignment when the user needs stable requirement IDs, verification and durable progress tracking.
 ---
 
 # Task contract
@@ -77,6 +77,8 @@ If something cannot be completed, report the precise blocker, the evidence, and 
 
 ## Prompt 2 — New session: Compile before execution
 
+For a single outcome, use [well-defined objectives](../well-defined-objectives/SKILL.md). Use the contract below when several requirements need independent tracking.
+
 ```markdown
 ## Task Contract — Compile Before Execution
 
@@ -95,7 +97,7 @@ Examine my request and relevant project context. Produce a Task Contract with:
 5. **Agent autonomy:** Implementation details you may decide independently, without changing binding requirements.
 6. **Deliverables:** The exact files, functionality, artifacts, outputs, and destinations I expect.
 7. **Acceptance criteria:** A concrete, observable verification method for each requirement.
-8. **Milestones:** The simplest reasonable implementation sequence, with requirement IDs mapped to milestones.
+8. **Milestones (optional):** Include these only when sequencing work materially helps verification. A simple verifiable objective suffices on its own.
 
 Check the contract against my original request to ensure nothing was lost or invented.
 
@@ -111,7 +113,7 @@ Keep implementation plans separate from the specification. You may improve your 
 
 **Phase 3 — Execute**
 
-- Implement the milestones in order, adjusting implementation details as necessary.
+- Implement the requirements, following any milestones that apply.
 - Maintain requirement statuses: PENDING, IMPLEMENTED, VERIFIED, FAILED, or BLOCKED.
 - Check your actions against binding requirements before major steps.
 - Do not substitute goals, omit constraints, invent unnecessary work, or silently defer deliverables.

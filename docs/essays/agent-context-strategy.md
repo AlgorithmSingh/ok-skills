@@ -2,7 +2,7 @@
 type: essay
 title: "Agent context strategy: what to extract"
 description: What to extract from meeting notes and agent sessions for coding, SRE and assistant personas, with explicit tool and method decisions.
-timestamp: 2026-11-19T18:10:00-05:00
+timestamp: 2026-11-22T22:00:00-05:00
 ---
 
 # Agent context strategy: what to extract
@@ -92,26 +92,6 @@ These are judgments about ingredients to borrow, not instructions to install the
 | [SkillOpt / SkillOpt-Sleep](https://github.com/microsoft/SkillOpt) | Borrow; defer full loop | Preserve proposed skill changes and supporting/counterexample evidence. Automatic optimization, replay and adoption sit beyond extraction. |
 | Project-specific investigative prompts | Use | Use the common categories plus domain evidence questions. No superiority over customized framework extraction is established. Adapt the evidence questions to the project. |
 
-The context-engineering materials deserve separate decisions rather than a single blanket endorsement. These rows separate the named skills and related variations.
-
-| Skill/course topic | Decision | Keep in extraction; defer the machinery |
-|---|---|---|
-| memory-systems | Borrow; defer runtime/workflow | Entity identity, validity, corrections and supersession. Defer stores/read timing. Temporary blockers still deserve extraction. |
-| filesystem-context | Borrow; defer runtime/workflow | Exact paths, source and continuation pointers. Defer offloading and dynamic loading. |
-| context-degradation | Borrow; defer runtime/workflow | Preserve evidenced constraint loss, poisoning, clash, confusion or distraction. A bad result alone cannot diagnose context rot or lost-in-middle. |
-| context-fundamentals | Borrow; defer runtime/workflow | Distinguish instructions, observations, tool results and derived summaries. |
-| context-compression | Borrow; defer runtime/workflow | Keep intent, changed artifacts, attempts, results and remaining work; preserve source recovery. |
-| multi-agent-patterns | Borrow; defer runtime/workflow | Actual delegation and handoffs. Defer supervisor/swarm/hierarchical topology choices. |
-| evaluation / advanced-evaluation | Borrow; defer runtime/workflow | Source fidelity, omissions and persona questions. Defer judge infrastructure and monitoring. |
-| tool-design / harness-engineering | Borrow; defer runtime/workflow | Relevant interface contracts, prerequisites, verification obligations and observed failures. Defer new tool/harness construction. |
-| context-optimization / self-managed-context | Outside scope; retain relevant evidence | Extract demonstrated information-loss incidents. Defer pruning, masking, caching, partitioning, edit receipts and eviction. |
-| project-development / self-improvement-loops | Borrow; defer runtime/workflow | Preserve proposed lessons and evidence. Defer optimizer families and automatic instruction changes. |
-| hosted-agents / latent-briefing | Outside scope; retain relevant evidence | Preserve environment and handoff content. Defer hosted execution and KV-cache/Attention Matching transport. |
-| Book-SFT / digital-brain / interleaved-thinking examples | Outside scope; retain relevant evidence | Domain examples. Borrow useful episode distinctions; no default personal-OS or training pipeline. |
-| Context Engineering course | Borrow; defer runtime/workflow | Keep provenance, semantic/episodic/procedural meaning, active continuity, validity and source recovery. Defer search, ranking, window management and automatic prompt optimization. |
-| Spec-Driven Development course | Borrow; defer runtime/workflow | Keep intent, non-goals, acceptance, decision revisions and validation evidence. Defer constitution/branch/interview ceremonies, Spec Kit/OpenSpec adoption. |
-| Agentic Knowledge Graph Construction course | Borrow; defer runtime/workflow | Distinguish subject/domain, source/lexical and claim layers; keep explicit identity and relationship meaning. Defer ADK topology, schema approval loops and graph-building pipelines. |
-
 ## 5. Graphs, memory and enrichment
 
 Preserve a relationship when losing it would change meaning: which component a constraint affects, whose migration blocks a release, or what evidence supports a claim. Also retain direction, condition, time and source. Proposed, code-declared and runtime-observed dependencies are different claims. This is a content requirement; a graph service remains optional.
@@ -139,8 +119,6 @@ These domain variations sharpen what counts as an outcome. Apply them only when 
 | Application delivery | Simulation, deployment, owner/customer use, privacy assertions and verified teardown differ. |
 | Creative production | Creator intent, assets, rendering, visual review and acceptance differ. |
 | Persona model training | Checkpoint identity, evaluation exposure, persona quality, speech delivery and human feedback differ. |
-| Weight editing and improvement experiments | Literal versus assisted arm, exact candidate, permitted feedback, native result and independent evaluation differ. |
-| Dataset/lab records | Chosen versus proposed tooling, dataset/split/version identity, protected answers/traces and evaluation exposure matter. |
 
 The following related tools and techniques also have explicit decisions. They do not become extraction dependencies.
 
@@ -152,24 +130,20 @@ The following related tools and techniques also have explicit decisions. They do
 | [ContextBench](https://contextbench.github.io/) | Defer | Code-context discovery/use is a later stage. |
 | [LongMemEval](https://github.com/xiaowu0162/LongMemEval) / [V2](https://arxiv.org/abs/2605.12493) | Borrow test ideas; defer benchmark | Borrow updates, time, abstention, workflow and gotcha cases. QA scores do not isolate extraction quality. |
 | [LoCoMo](https://github.com/snap-research/LoCoMo) | Borrow test ideas; defer benchmark | Borrow speaker/event/chronology checks; conversational recall is insufficient for operational commitments. |
-| Lexical/regex/BM25; semantic embeddings/cosine; hybrid/RRF/reranking; relevance/recency/reuse/trust | Defer system design | Source-inspection or retrieval choices. Preserve names, dates and authority; defer ranking design and weights. |
-| Chunking/AST/overlap/neighbors; pruning/truncation/compaction/scratchpads; registries/hooks | Defer system design | Preserve surrounding evidence and source recovery. Defer indexing/window/runtime settings. |
-| GCS, SQLite/FTS5, DuckDB, Parquet/CSV/JSONL, Chroma, BigQuery, Firestore, PostgreSQL/Cloud SQL | Outside scope | Storage/query tools. No database selection belongs in this recommendation. |
-| Multi-VPS/single writer/WAL/snapshots; SSH/IAM/ADC/WIF/OAuth/JWT; gateways/HTTP/REST/MCP/FastAPI/Cloud Run/Kubernetes | Outside scope | Consistency, access and delivery tools. Extract relevant constraints, never secret values; defer deployment design. |
-| Dolt/DVC/lakeFS/Git/git-annex; TRL/Axolotl/SFT/GRPO/Gemma/QLoRA/vLLM/Harbor/Inspect/MLflow/SkyPilot/dstack/Ray/Docker/fleet-sandbox | Outside scope | Lab subject matter. Extract decisions, provenance, results and restrictions; do not design this stack here. Inspect is optional if extraction evaluation is later automated. |
-| Pi/Claude Code/Codex/OpenCode/Kimi; Plannotator/spec-review-agent; Terminal/PTY/STT/TTS | Outside scope | Source identities and review interfaces. Preserve roles, steering and handoffs; UI construction is separate. |
 
 ## 7. Run the extraction
 
-In Claude Code, use [extract-session-details](../../extract-session-details/SKILL.md) for agent session logs and AI chat exports, or [extract-meeting-notes](../../extract-meeting-notes/SKILL.md) for meeting transcripts and notes. Both store what they extract instead of returning a brief. Each source is first compressed on its own into `compressed/`, keeping every specific with links to its lines. A second pass then writes one extraction document per source into `docs/extractions/`, holding material shared between sources once and linking sources that revise, adapt, continue, conflict with or judge each other.
+In Claude Code, use [extract-session-details](../../extract-session-details/SKILL.md) for agent session logs and AI chat exports, or [extract-meeting-notes](../../extract-meeting-notes/SKILL.md) for meeting transcripts and notes. Both store what they extract instead of returning a brief. Each source is first compressed on its own into `compressed/`, keeping every specific with links to its lines. A second pass then writes one extraction document per source into `docs/extractions/`, holding material shared between sources once and linking sources that revise, adapt, continue, conflict with or judge each other. Stage 3 routes actionable records in event-date order to maintained subject pages under `docs/knowledge/`. The registry identifies subjects, the ledger records each source’s progress, and the holding page preserves actionable records whose subject is unclear. Leave evidence and knowledge edits available for Git review.
 
-Use the [working extraction prompt](#working-extraction-prompt) with the supplied sources and intended consumer tasks. Do an extraction pass, then revisit the source specifically for omissions, false agreement, lost conditions and unsupported outcomes. Do not manufacture records to fill a category. Use the existing model or agent to perform both passes.
+For a report-only variant, use the [working extraction prompt](#working-extraction-prompt) with the supplied sources and intended consumer tasks. Do an extraction pass, then revisit the source specifically for omissions, false agreement, lost conditions and unsupported outcomes. Do not manufacture records to fill a category. Use the existing model or agent to perform both passes.
 
 Check a small varied set of real passages before changing the brief further. Can coding identify the actual constraint and verification gap? Can SRE identify observed versus assumed recovery? Can the assistant identify accepted ownership, prerequisites and actual status? Compare to a plain summary and the existing seven-category instructions. Review missing facts and unsupported upgrades directly; no universal score threshold is justified yet.
 
 For example, if a meeting explicitly selects option A and a later agent proposes B, preserve both attributions. B remains a proposal unless the sources establish acceptance or replacement.
 
 ## Working extraction prompt
+
+This report-only variant returns a single report. To persist the three-stage store, use the skills above.
 
 Supply source notes/transcripts, any supporting artifacts, the source kind, the as-of date and each consumer's task. Use this instruction with an existing model or agent:
 

@@ -33,6 +33,17 @@ from collections import Counter
 from datetime import datetime, timezone
 
 REDACTED = "[REDACTED]"
+# Match quoted paths (including spaces) before matching bare path tokens.
+HOME_PREFIX = r"(?:/(?:Users|home)/|[~]/)"
+QUOTED_HOME = re.compile(r"(?P<q>['\"`])" + HOME_PREFIX + r"(?:(?!(?P=q))[^\n])*(?P=q)")
+BARE_HOME = re.compile(HOME_PREFIX + r"""[^\s"'`()<>\[\]{}|;:,\\]*""")
+
+
+def redact_paths(text):
+    text = QUOTED_HOME.sub(lambda m: m["q"] + "[local path]" + m["q"], text)
+    return BARE_HOME.sub("[local path]", text)
+
+
 PATTERNS = [
     ("private-key", re.compile(r"-----BEGIN [A-Z ]*PRIVATE KEY-----[\s\S]*?-----END [A-Z ]*PRIVATE KEY-----")),
     ("anthropic-key", re.compile(r"\bsk-ant-[A-Za-z0-9_\-]{20,}")),
@@ -175,7 +186,7 @@ class Redactor:
             text, n = rx.subn(lambda m: m.group(1) + REDACTED + '"', text)
             if n and count:
                 self.counts["key-shaped string: " + name] += n
-        return text
+        return redact_paths(text)
 
     def quiet(self, text):
         return self(text, count=False)
@@ -832,7 +843,7 @@ def single(argv, R, agents_only, pre):
             label = meta.get("description") or meta.get("label") or os.path.basename(src)
             parts.append(f"\n\n## {'Agent' if agents_only else 'Subagent'} transcript: {label} "
                          f"({os.path.basename(src)})\n\n" + u.text)
-    text = "".join(parts)
+    text = redact_paths("".join(parts))
     if R.leftovers(text):
         sys.exit("refusing to write: credential-shaped text left after redaction")
     total = missing = problems = 0
@@ -857,6 +868,12 @@ def shown_path(p):
     return "~" + p[len(home):] if p.startswith(home + "/") else p
 
 
+def log_label(path):
+    if redact_paths(path) == path:
+        return path
+    return "local-log-" + hashlib.sha256(path.encode()).hexdigest()[:16]
+
+
 def previous_sources(path):
     """Source logs listed in an earlier MANIFEST.md's Sources table."""
     found = set()
@@ -864,7 +881,7 @@ def previous_sources(path):
         for line in open(path, encoding="utf-8"):
             cells = [c.strip() for c in line.split(" | ")]
             if line.startswith("| ") and len(cells) > 2 and cells[1].startswith("`") and cells[1].endswith("`"):
-                found.add(cells[1].strip("`"))
+                found.add(log_label(cells[1].strip("`")))
     except OSError:
         pass
     return found
@@ -1113,7 +1130,7 @@ def tree(plan_path, out_dir, R, previous=None):
     unreadable += sweep_unreadable
 
     # checks, then write
-    final = {rel: "".join(chunks) for rel, chunks in files.items()}
+    final = {rel: redact_paths("".join(chunks)) for rel, chunks in files.items()}
     leftovers = {rel: R.leftovers(text) for rel, text in final.items()}
     if any(leftovers.values()):
         sys.exit("refusing to write: credential-shaped text left after redaction in "
@@ -1129,7 +1146,7 @@ def tree(plan_path, out_dir, R, previous=None):
     for c in checks:
         unknown.update(c[3].st["unknown"])
     wf_mismatch = [w for w in wf_checks if w[2] is not None and w[2] != w[3]]
-    lost = sorted(previous_sources(previous) - {r[1] for r in rows} - set(plan.get("retired", {}))) if previous else []
+    lost = sorted(previous_sources(previous) - {log_label(r[1]) for r in rows} - {log_label(p) for p in plan.get("retired", {})}) if previous else []
     markers = sum(text.count(REDACTED) for text in final.values())
     dropped = Counter()
     for c in {id(c[3]): c[3] for c in checks}.values():
@@ -1183,13 +1200,13 @@ def tree(plan_path, out_dir, R, previous=None):
     for kind, shown, rel, unit, n, miss, tools in checks:
         s = unit.st
         models = ", ".join(f"{k} ({v})" for k, v in s["models"].most_common())
-        m.append(f"| {kind} | `{shown}` | {s['lines']} | {s['prompts']} | {s['replies']} | {s['results']} | "
+        m.append(f"| {kind} | `{log_label(shown)}` | {s['lines']} | {s['prompts']} | {s['replies']} | {s['results']} | "
                  f"{s['answers']} | {s['tool_calls']} | {models} | `{rel}` | {n - len(miss)}/{n} |")
     if missing:
         m += ["", "## Missing text", ""]
         for kind, shown, rel, unit, n, miss, tools in checks:
             m += [f"- `{shown}` {k}: {clip(R.quiet(x), 200)}" for k, x in miss[:10]]
-    final[f"{sub}/MANIFEST.md"] = "\n".join(m) + "\n"
+    final[f"{sub}/MANIFEST.md"] = redact_paths("\n".join(m) + "\n")
     if R.leftovers(final[f"{sub}/MANIFEST.md"]):
         sys.exit("refusing to write: credential-shaped text in the manifest")
     for rel, text in final.items():
