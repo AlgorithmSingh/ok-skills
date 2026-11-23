@@ -1,5 +1,9 @@
 # Documentation log
 
+## 2026-11-23
+
+- Added a [guides section](guides/index.md) with [LangGraph from primitives to production](guides/langgraph-from-primitives-to-production.md), and linked it from `README.md` and `docs/index.md`.
+
 ## 2026-11-22
 
 - Split the extraction references by stage, documented replay and Git review, and added checker tests, a worked store and six public behavioral fixtures. Updated skill routing, essay guidance and repository-wide checks (`scripts/check_repo.py`).

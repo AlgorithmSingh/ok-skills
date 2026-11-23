@@ -36,6 +36,10 @@ Paste a decision prompt into an existing conversation. Supply the rule pack as r
 - [Decision recap](decision-recap/PROMPT.md) summarizes completed work, decisions and alternatives.
 - The Spring Boot rule pack contains [Java language rules](springboot-rules/java.md) and [Spring Boot rules](springboot-rules/spring-boot.md), with examples for implementation and review.
 
+## Guides
+
+- [LangGraph from primitives to production](docs/guides/langgraph-from-primitives-to-production.md) explains LangGraph's runtime primitives and the enterprise essentials: loop bounds, checkpointing, human approval, idempotent retries, streaming with secret injection and PII redaction, and cross-thread memory.
+
 ## Essays
 
 - [Agent context strategy](docs/essays/agent-context-strategy.md) explains what coding, SRE and assistant readers need from meetings and agent sessions.
